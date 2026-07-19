@@ -10,6 +10,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    // Pasang library Supabase (tambahkeun ieu di HTML anjeun)
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
     /* 1. RESET DASAR */
@@ -812,6 +815,24 @@
             } else {
                 // Mode 'sadaya' - langsung nyetak sadaya anu aya di wadah-kertas-cetak
                 window.print();
+            }
+        }
+        
+        const SUPABASE_URL = 'https://ilyryehrupwgktoklsbt.supabase.co'; // Copy ti dashboard
+        const SUPABASE_ANON_KEY = 'sb_publishable_n_BNMZN5UO6Jo5JaLt8Uyg_wgKyqw-j'; // Copy tina gambar
+        
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Fungsi simpan data
+        async function simpanKaSupabase(nama, data) {
+            const { error } = await supabase
+                .from('kitab_data')
+                .upsert({ nama_kitab: nama, konten: data });
+            
+            if (error) {
+                alert("Aduh, aya masalah: " + error.message);
+            } else {
+                alert("Alhamdulillah, data tos tersimpan di server Supabase!");
             }
         }
 </script>
