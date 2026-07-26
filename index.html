@@ -23,15 +23,15 @@
         height: 215mm;
         min-width: 330mm;
         min-height: 215mm;
-        max-height: 215mm; /* Dikonci supaya preview aplikasi stabil */
+        max-height: 215mm;
         background-color: #ffffff; 
         color: #1e293b;
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-        border: none !important; /* <--- IEU NU DIROBAH */
+        border: none !important;
         display: flex; 
         position: relative; 
         overflow: hidden; 
-        margin: 20px auto; /* Spasi antar kertas dina preview */
+        margin: 20px auto;
     }
 
     .sub-halaman {
@@ -42,7 +42,6 @@
         flex-direction: column; 
         justify-content: space-between; 
         overflow: hidden;
-        
     }
 
     .garis-lipat {
@@ -91,16 +90,12 @@
         transform: scale(1.1);
     }
 
-    /* 4. SETELAN CETAK (PRINT) - AGGRESSIVE RESET */
+    /* 4. SETELAN CETAK (PRINT) */
     @media print {
         @page { size: 330mm 215mm; margin: 0 !important; }
-        
-        /* Sumputkeun sidebar & elemen teu perlu */
         .no-print, #file-input, #judul-preview, div[style*="width: 480px"], .bg-slate-800.flex-shrink-0 { 
             display: none !important; 
         }
-
-        /* Bersihkeun indung layout */
         html, body, .flex, .h-screen, .overflow-hidden {
             display: block !important;
             height: auto !important;
@@ -109,16 +104,12 @@
             color: #000000 !important;
             margin: 0 !important;
         }
-
-        /* Wadah kertas cetak */
         #wadah-kertas-cetak {
             display: block !important;
             width: 330mm !important;
             height: auto !important;
             margin: 0 !important;
         }
-
-        /* Lembar F4 cetakan */
         .lembar-f4-cetak {
             display: flex !important; 
             flex-direction: row !important;
@@ -132,12 +123,10 @@
             margin: 0 !important; 
             position: relative !important;
         }
-
         .sub-halaman { width: 165mm !important; height: 215mm !important; }
         .garis-lipat { border-left: 1px dashed #94a3b8 !important; }
     }
 
-    /* Ngahapus garis kotak tina tabel atanapi div kontén di jero kitab */
     .lembar-f4-cetak table, 
     .lembar-f4-cetak td, 
     .lembar-f4-cetak div, 
@@ -146,31 +135,21 @@
         outline: none !important;
     }
 
-    /* Upami anjeun hoyong ngahapus garis kotak anu masih némbongan dina print */
     @media print {
-        .lembar-f4-cetak * {
-            border: none !important;
-        }
-        /* Tetepkeun garis tengah (garis lipat) supados aya panduan */
-        .garis-lipat {
-            border-left: 1px dashed #cbd5e1 !important;
-        }
+        .lembar-f4-cetak * { border: none !important; }
+        .garis-lipat { border-left: 1px dashed #cbd5e1 !important; }
     }
-</style>
+    </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
 
-    <!-- WADAH UTAMA: Otomatis adaptif (Kolom kénca handap-luhur di HP, gigireun di Laptop) -->
 <div class="flex flex-col lg:flex-row w-full min-h-screen lg:h-screen overflow-y-auto lg:overflow-hidden bg-slate-900 text-slate-100">
         
-    <!-- ======================================================= -->
-    <!-- 1. PANEL INPUTAN (KENCA) - RESPONSIF DI HP, DIKONCI 480px DI LAPTOP -->
-    <!-- ======================================================= -->
+    <!-- 1. PANEL INPUTAN (KENCA) -->
     <div class="w-full lg:w-[480px] lg:min-w-[480px] lg:max-w-[480px] lg:h-full bg-slate-800 flex flex-col border-b lg:border-r border-slate-700 no-print">
         
         <!-- PANEL TOP BAR -->
         <div class="bg-slate-900 border-b border-slate-700 shadow-lg p-3 space-y-3 z-30 flex-shrink-0">
-            <!-- HEADER UTAMA & TOMBOL UTAMA -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                     <h1 class="text-sm font-bold text-indigo-400">Bandongan & Nadoman Studio</h1>
@@ -183,8 +162,6 @@
                     <button onclick="bukaDariDatabase()" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] font-bold py-1 px-2.5 rounded cursor-pointer transition">
                         📂 Muat ti DB
                     </button>
-                    
-                    <!-- Tombol Tambahan kanggo Impor File JSON -->
                     <input type="file" id="fileJsonInput" accept=".json" style="display: none;" onchange="prosesImporJson(event)">
                     <button onclick="document.getElementById('fileJsonInput').click()" class="bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-bold py-1 px-2.5 rounded cursor-pointer transition">
                         📂 Impor JSON
@@ -192,7 +169,6 @@
                 </div>
             </div>
 
-            <!-- TOMBOL JINIS BARIS -->
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 bg-slate-950 p-2 rounded border border-slate-800">
                 <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wider">➕ Tambah Baris:</span>
                 <div class="flex flex-wrap gap-1.5">
@@ -211,7 +187,6 @@
 
         <!-- WADAH EUSI NAVIGASI -->
         <div class="flex-1 p-4 overflow-y-auto space-y-3 pb-28">
-            <!-- FITUR PILIHAN KITAB -->
             <div class="bg-slate-950 p-2 rounded border border-slate-800 flex items-center justify-between gap-2 mb-2">
                 <span class="text-[11px] font-bold text-indigo-400 uppercase tracking-wider">📚 Kitab Aktip:</span>
                 <select id="pilihanKitab" onchange="gantiKitabAktip(this.value)" class="flex-1 p-1 bg-slate-900 text-slate-100 rounded border border-slate-700 text-xs focus:outline-none focus:border-indigo-500 font-bold">
@@ -257,7 +232,6 @@
                 <div class="w-full p-2.5 bg-slate-950/80 text-left border-b border-slate-800">
                     <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">3. Eusi Baris Kitab & Susunan Logat</span>
                 </div>
-                
                 <div class="flex flex-col p-2">
                     <div class="flex bg-slate-950 p-1.5 text-[10px] font-bold text-slate-400 rounded-t border-t border-x border-slate-800">
                         <div class="w-[6%] text-center">☰</div>
@@ -265,7 +239,6 @@
                         <div class="w-[72%] text-center text-slate-300">Kolom Eusi Konten</div>
                         <div class="w-[6%] text-center">✕</div>
                     </div>
-                    
                     <div id="wadah-baris-input" class="bg-slate-950 rounded-b border border-slate-800 p-1.5 space-y-2"></div>
                 </div>
             </div>
@@ -282,616 +255,34 @@
         </div>
     </div>
 
-        <!-- ======================================================= -->
-        <!-- 2. PANEL PREVIEW BUKU (KATUHUKUN) - OTOMATIS NGAGUSER SESA LAYAR -->
-        <!-- ======================================================= -->
-        <div class="flex-1 h-full bg-slate-950 overflow-auto p-6 flex flex-col items-center">
-            <h2 id="judul-preview" class="text-xs font-semibold text-slate-400 mb-4 pb-1 border-b border-slate-800 w-full text-center no-print flex-shrink-0">
-                Sawangan Cetak Buku Lipat Tengah
-            </h2>
-            <!-- Wadah kertas dipaparin margin otomatis supados rapih di tengah sésa rohangan -->
-            <div id="wadah-kertas-cetak" class="w-full flex flex-col items-center gap-8 pb-16"></div>
-        </div>
-        
+    <!-- 2. PANEL PREVIEW BUKU (KATUHUKUN) -->
+    <div class="flex-1 h-full bg-slate-950 overflow-auto p-6 flex flex-col items-center">
+        <h2 id="judul-preview" class="text-xs font-semibold text-slate-400 mb-4 pb-1 border-b border-slate-800 w-full text-center no-print flex-shrink-0">
+            Sawangan Cetak Buku Lipat Tengah
+        </h2>
+        <div id="wadah-kertas-cetak" class="w-full flex flex-col items-center gap-8 pb-16"></div>
     </div>
-
-    <script>
-        let kitabData = [
-            {
-                nama: "MUQODDIMAH",
-                rangkuman: "❖ Rukun Islam aya 5 perkara.",
-                dicitak: true,
-                baris: [
-                    { tipe: "arabfull", teks: "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ" }
-                ]
-            }
-        ];
-
-        let indexFasalAktip = 0;
-        let indexBarisAktip = 0;
-        let barisNuKeurDiDrag = null;
-        let modeCetak = "sadaya";
-
-        function toggleAccordion(idKonten, idPanah) {
-            const konten = document.getElementById(idKonten);
-            const panah = document.getElementById(idPanah);
-            if (!konten || !panah) return;
-            if (konten.classList.contains('tutup')) {
-                konten.classList.remove('tutup');
-                panah.style.transform = 'rotate(0deg)';
-            } else {
-                konten.classList.add('tutup');
-                panah.style.transform = 'rotate(-90deg)';
-            }
-        }
-
-        function renderTabFasal() {
-            const wadahTab = document.getElementById('wadah-tab-fasal');
-            if (!wadahTab) return;
-            wadahTab.innerHTML = '';
-            
-            kitabData.forEach((fasal, idx) => {
-                const rowTab = document.createElement('div');
-                rowTab.className = `flex items-center justify-between p-1 rounded border transition ${idx === indexFasalAktip ? 'bg-slate-800 border-indigo-500' : 'bg-slate-900 border-slate-800'}`;
-                
-                const cb = document.createElement('input');
-                cb.type = 'checkbox';
-                cb.checked = fasal.dicitak === undefined ? true : fasal.dicitak;
-
-                cb.addEventListener("change", function (e) {
-                    e.stopPropagation();
-                    kitabData[idx].dicitak = this.checked;
-
-                    if (modeCetak === "terpilih") {
-                        prosesTeksMenjadiBooklet();
-                    }
-                });
-
-                const btn = document.createElement('button');
-                btn.className = `flex-1 text-left text-[11px] font-bold truncate transition cursor-pointer ${idx === indexFasalAktip ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'}`;
-                btn.textContent = `${idx + 1}. ${fasal.nama || 'TANPA NAMA'}`;
-                btn.onclick = () => {
-                    indexFasalAktip = idx;
-                    indexBarisAktip = 0;
-                    bukaFasalAktip();
-                };
-
-                rowTab.appendChild(cb);
-                rowTab.appendChild(btn);
-                wadahTab.appendChild(rowTab);
-            });
-            const inputNama = document.getElementById('edit-nama-fasal');
-            if (inputNama) inputNama.value = kitabData[indexFasalAktip].nama;
-        }
-
-        function tambahFasalEnggal() {
-            const namaAnyar = "FASAL " + (kitabData.length + 1);
-            kitabData.push({ nama: namaAnyar, rangkuman: "", dicitak: true, baris: [] });
-            indexFasalAktip = kitabData.length - 1;
-            indexBarisAktip = 0;
-            bukaFasalAktip();
-        }
-
-        function gantiNamaFasalAktip(val) {
-            kitabData[indexFasalAktip].nama = val.toUpperCase();
-            renderTabFasal();
-            prosesTeksMenjadiBooklet();
-        }
-
-        function hapusFasalAktip() {
-            if (kitabData.length > 1) {
-                kitabData.splice(indexFasalAktip, 1);
-                indexFasalAktip = Math.max(0, indexFasalAktip - 1);
-                indexBarisAktip = 0;
-                bukaFasalAktip();
-            } else {
-                alert("Teu tiasa dihapus!");
-            }
-        }
-
-        function updateRangkumanFasal(val) {
-            kitabData[indexFasalAktip].rangkuman = val;
-            prosesTeksMenjadiBooklet();
-        }
-
-        function bukaFasalAktip() {
-            renderTabFasal();
-            const inputRangkuman = document.getElementById('input-rangkuman-fasal');
-            if (inputRangkuman) inputRangkuman.value = kitabData[indexFasalAktip].rangkuman || "";
-            renderBarisInput();
-            prosesTeksMenjadiBooklet();
-        }
-
-        function selipkanLafadzKeBandongan(indexArabFull, lafadz) {
-            const barisFasal = kitabData[indexFasalAktip].baris;
-            
-            if (barisFasal[indexBarisAktip] && barisFasal[indexBarisAktip].tipe === "bandongan") {
-                let barisAktip = barisFasal[indexBarisAktip];
-                if (barisAktip.arab && barisAktip.arab.trim() !== "") {
-                    barisAktip.arab = barisAktip.arab.trim() + " " + lafadz.trim();
-                } else {
-                    barisAktip.arab = lafadz.trim();
-                }
-            } 
-            else if (barisFasal[indexArabFull + 1] && barisFasal[indexArabFull + 1].tipe === "bandongan") {
-                let barisHandap = barisFasal[indexArabFull + 1];
-                if (barisHandap.arab && barisHandap.arab.trim() !== "") {
-                    barisHandap.arab = barisHandap.arab.trim() + " " + lafadz.trim();
-                } else {
-                    barisHandap.arab = lafadz.trim();
-                }
-                indexBarisAktip = indexArabFull + 1;
-            } 
-            else {
-                const barisAnyar = {
-                    tipe: "bandongan",
-                    luhur: "",
-                    arab: lafadz.trim(),
-                    sunda: ""
-                };
-                barisFasal.splice(indexArabFull + 1, 0, barisAnyar);
-                indexBarisAktip = indexArabFull + 1;
-            }
-            
-            renderBarisInput();
-            prosesTeksMenjadiBooklet();
-        }
-
-        function buatVisualLafadzKlik(teks, indexBaris) {
-    if (!teks || teks.trim() === "") {
-        return `<span class="text-slate-500 italic text-[11px]">Ketikkeun teks arab di kolom handap...</span>`;
-    }
-    const kumpulanKecap = teks.split(/(\s+)/);
-    const hasil = kumpulanKecap.map(item => {
-        if (item.trim() === "") return item;
-        return `<span class="lafadz-klik font-arab text-lg font-bold text-emerald-400 cursor-pointer" onclick="selipkanLafadzKeBandongan(${indexBaris}, '${item.replace(/'/g, "\\'")}')">${item}</span>`;
-    }).join('');
-
-    // Bungkus hasilna ku div RTL
-    return `<div dir="rtl" class="text-right">${hasil}</div>`;
-}
-
-
-        function renderBarisInput() {
-            const wadah = document.getElementById('wadah-baris-input');
-            if (!wadah) return;
-            wadah.innerHTML = '';
-            const dataBaris = kitabData[indexFasalAktip].baris;
-
-            dataBaris.forEach((item, index) => {
-                const row = document.createElement('div');
-                row.className = `flex gap-1.5 items-center p-1 bg-slate-900/50 rounded border transition ${index === indexBarisAktip ? 'border-amber-500 bg-slate-800/80 ring-1 ring-amber-500/30' : 'border-slate-800'}`;
-                row.setAttribute('draggable', 'true');
-                row.setAttribute('data-index', index);
-                
-                row.onclick = () => { setBarisAktip(index); };
-                
-                row.addEventListener('dragstart', handleDragStart);
-                row.addEventListener('dragover', handleDragOver);
-                row.addEventListener('drop', handleDrop);
-                row.addEventListener('dragend', handleDragEnd);
-
-                let htmlKontenInput = '';
-                
-                if (item.tipe === 'arabfull') {
-                    const visualLafadz = buatVisualLafadzKlik(item.teks, index);
-                    htmlKontenInput = `
-                        <div class="w-[16%] flex flex-col justify-center">
-                            <span class="text-[10px] font-bold text-emerald-400 uppercase block">Arab Full</span>
-                            <span class="text-[8px] text-slate-400 font-sans leading-tight">Klik lafadz pikeun gabung ka handap 👇</span>
-                        </div>
-                        <div class="w-[72%] flex flex-col gap-1.5 bg-slate-950 p-2 rounded border border-emerald-900">
-                            <div class="p-1.5 bg-slate-900 rounded border border-slate-800 text-right min-h-[36px] flex flex-row-reverse flex-wrap gap-x-1 items-center" style="direction: rtl;">
-                                ${visualLafadz}
-                            </div>
-                            <input type="text" value="${item.teks || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataArabFull(${index}, this.value)" class="w-full p-1 bg-slate-900 text-slate-100 font-arab text-sm text-right rounded border border-slate-700 focus:border-emerald-500" placeholder="Ketik/Paste Teks Arab Full di dieu...">
-                        </div>
-                    `;
-                } else if (item.tipe === 'nadoman') {
-                    htmlKontenInput = `
-                        <div class="w-[16%] text-[10px] font-bold text-cyan-400 uppercase">Nadoman</div>
-                        <div class="w-[72%] flex gap-1 bg-slate-950 p-1 rounded border border-slate-800">
-                            <input type="text" value="${item.bait1 || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataNadoman(${index}, 'bait1', this.value)" class="w-1/2 p-1 bg-slate-900 text-slate-100 text-xs rounded border border-slate-700" placeholder="Padalisan 1">
-                            <input type="text" value="${item.bait2 || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataNadoman(${index}, 'bait2', this.value)" class="w-1/2 p-1 bg-slate-900 text-slate-100 text-xs rounded border border-slate-700" placeholder="Padalisan 2">
-                        </div>
-                    `;
-                } else {
-                    htmlKontenInput = `
-                        <div class="w-[16%] text-[10px] font-bold text-amber-400 uppercase">Bandongan</div>
-                        <div class="w-[72%] flex gap-1">
-                            <input type="text" value="${item.luhur || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataBandongan(${index}, 'luhur', this.value)" class="w-1/3 p-1 bg-slate-950 text-slate-100 text-[10px] italic rounded border border-slate-700" placeholder="Luhur">
-                            <input type="text" value="${item.arab || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataBandongan(${index}, 'arab', this.value)" class="w-1/3 p-1 bg-slate-950 text-slate-100 font-arab text-sm text-right rounded border border-slate-700" placeholder="Arab">
-                            <input type="text" value="${item.sunda || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataBandongan(${index}, 'sunda', this.value)" class="w-1/3 p-1 bg-slate-950 text-slate-100 text-[10px] rounded border border-slate-700" placeholder="Sunda">
-                        </div>
-                    `;
-                }
-
-                row.innerHTML = `
-                    <div class="w-[6%] text-center cursor-grab text-slate-500 font-bold select-none text-xs">☰</div>
-                    ${htmlKontenInput}
-                    <div class="w-[6%] text-center"><button onclick="event.stopPropagation(); hapusBaris(${index})" class="text-red-400 text-xs font-bold cursor-pointer">✕</button></div>
-                `;
-                wadah.appendChild(row);
-            });
-        }
-
-        function updateDataArabFull(idx, val) { 
-            kitabData[indexFasalAktip].baris[idx].teks = val; 
-            const wadah = document.getElementById('wadah-baris-input');
-            if(wadah && wadah.children[idx]) {
-                const visualBox = wadah.children[idx].querySelector('.bg-slate-950 > div');
-                if(visualBox) visualBox.innerHTML = buatVisualLafadzKlik(val, idx);
-            }
-            prosesTeksMenjadiBooklet(); 
-        }
-        
-        function updateDataBandongan(idx, field, val) { kitabData[indexFasalAktip].baris[idx][field] = val; prosesTeksMenjadiBooklet(); }
-        function updateDataNadoman(idx, field, val) { kitabData[indexFasalAktip].baris[idx][field] = val; prosesTeksMenjadiBooklet(); }
-        
-        function setBarisAktip(index) { 
-            indexBarisAktip = index; 
-            const wadah = document.getElementById('wadah-baris-input');
-            if(!wadah) return;
-            Array.from(wadah.children).forEach((child, idx) => {
-                if(idx === index) {
-                    child.className = `flex gap-1.5 items-center p-1 bg-slate-800/80 rounded border border-amber-500 ring-1 ring-amber-500/30 transition`;
-                } else {
-                    child.className = `flex gap-1.5 items-center p-1 bg-slate-900/50 rounded border border-slate-800 transition`;
-                }
-            });
-        }
-        
-        function tambahBaris(tipe) {
-            if(tipe === 'arabfull') kitabData[indexFasalAktip].baris.push({ tipe: "arabfull", teks: "" });
-            else if(tipe === 'nadoman') kitabData[indexFasalAktip].baris.push({ tipe: "nadoman", bait1: "", bait2: "" });
-            else kitabData[indexFasalAktip].baris.push({ tipe: "bandongan", luhur: "", arab: "", sunda: "" });
-            
-            indexBarisAktip = kitabData[indexFasalAktip].baris.length - 1;
-            renderBarisInput();
-            prosesTeksMenjadiBooklet();
-        }
-
-        function hapusBaris(index) {
-            kitabData[indexFasalAktip].baris.splice(index, 1);
-            indexBarisAktip = Math.max(0, index - 1);
-            renderBarisInput();
-            prosesTeksMenjadiBooklet();
-        }
-
-        function handleDragStart(e) { barisNuKeurDiDrag = this; this.classList.add('baris-dragged'); }
-        function handleDragOver(e) { if (e.preventDefault) e.preventDefault(); return false; }
-        function handleDrop(e) {
-            const indexAsal = parseInt(barisNuKeurDiDrag.getAttribute('data-index'));
-            const indexTujuan = parseInt(this.getAttribute('data-index'));
-            if (indexAsal !== indexTujuan) {
-                const moved = kitabData[indexFasalAktip].baris.splice(indexAsal, 1)[0];
-                kitabData[indexFasalAktip].baris.splice(indexTujuan, 0, moved);
-                indexBarisAktip = indexTujuan;
-                renderBarisInput();
-                prosesTeksMenjadiBooklet();
-            }
-            return false;
-        }
-        function handleDragEnd() { renderBarisInput(); }
-
-        // URL Web App ti Google Apps Script anjeun
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwILJ2fnC-mfCd7eSQnUS7V9nq260zN0-kHl6uxbExOC9e4vZ_k6LPIjdqwOVct4ER1BA/exec";
-
-        // 1. Fungsi Simpan kana Google Spreadsheet (Dumasar Kitab Aktip)
-        function simpanKeDatabase() {
-            // Kumpulkeun data dumasar kitab anu nuju dipilih dina dropdown
-            let payload = {
-                kitabAktip: typeof kitabAktip !== 'undefined' ? kitabAktip : 'safinah',
-                dataFasal: typeof daftarFasal !== 'undefined' ? daftarFasal : []
-            };
-
-            fetch(WEB_APP_URL, {
-                method: 'POST',
-                body: JSON.stringify(payload)
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.pesan);
-            })
-            .catch(error => {
-                console.error('Éror:', error);
-                alert("Gagal nyambung ka Spreadsheet!");
-            });
-        }
-
-        // 2. Fungsi Muat / Buka ti Google Spreadsheet
-        function bukaDariDatabase() {
-            let kitabDipilih = typeof kitabAktip !== 'undefined' ? kitabAktip : 'safinah';
-        
-            fetch(WEB_APP_URL + "?action=muat&kitab=" + kitabDipilih)
-            .then(response => response.json())
-            .then(data => {
-                if (data && data.length > 0) {
-                    daftarFasal = data;
-                    if (typeof databaseKitab !== 'undefined') {
-                        databaseKitab[kitabDipilih] = daftarFasal;
-                    }
-                    if (typeof indexFasalAktip !== 'undefined') indexFasalAktip = 0;
-                    if (typeof indexBarisAktip !== 'undefined') indexBarisAktip = 0;
-                    if (typeof bukaFasalAktip === 'function') bukaFasalAktip();
-                    alert("Alhamdulillah, data suksés dimuat tina Database!");
-                } else {
-                    alert("Teu acan aya data anu disimpen dina Spreadsheet untuk kitab ieu.");
-                }
-            })
-            .catch(error => {
-                console.error('Éror:', error);
-                alert("Gagal ngamuat data ti Spreadsheet!");
-            });
-        }
-
-        function prosesTeksMenjadiBooklet() {
-    const wadahKertas = document.getElementById('wadah-kertas-cetak');
-    const txtJudulPreview = document.getElementById('judul-preview');
-    if (!wadahKertas) return;
-    wadahKertas.innerHTML = ''; 
-
-    if(txtJudulPreview) {
-        txtJudulPreview.textContent = modeCetak === "terpilih" ? "Sawangan Cetak Buku (Ngan Fasal Nu Dipilih)" : "Sawangan Cetak Buku (Sadaya Fasal Ngagabung)";
-    }
-
-    const dataFasalDiProses = kitabData.filter(fasal => modeCetak === "sadaya" || fasal.dicitak !== false);
-
-    if(dataFasalDiProses.length === 0) {
-        wadahKertas.innerHTML = '<div class="text-center text-slate-500 py-12 text-xs">[Ulah hilap nyeklis fasal dina daptar pikeun dicitak]</div>';
-        return;
-    }
-
-    const wadahBlokKonten = document.createElement('div');
-    wadahBlokKonten.style.width = '141mm';
-    wadahBlokKonten.className = "font-sans text-slate-900 text-left invisible absolute top-0 left-0";
-    document.body.appendChild(wadahBlokKonten);
-
-    dataFasalDiProses.forEach((fasal) => {
-        const judulDiv = document.createElement('div');
-        judulDiv.className = "w-full text-center my-2 border-b-2 border-slate-900 pb-0.5 elemen-cetak-tunggal";
-        judulDiv.innerHTML = `<h2 class="text-xs font-extrabold tracking-wider text-slate-900 font-sans uppercase">${fasal.nama}</h2>`;
-        wadahBlokKonten.appendChild(judulDiv);
-
-        fasal.baris.forEach((item) => {
-            if (item.tipe === 'arabfull') {
-                if (item.teks && item.teks.trim()) {
-                    const arabDiv = document.createElement('div');
-                    arabDiv.className = "w-full text-center px-1 my-3 elemen-cetak-tunggal";
-                    arabDiv.innerHTML = `<p class="font-arab text-xl font-medium leading-loose text-slate-950 tracking-wide text-center">${item.teks}</p>`;
-                    wadahBlokKonten.appendChild(arabDiv);
-                }
-            } else if (item.tipe === 'nadoman') {
-                // 🛠️ PERBAIKAN 1: Gunakeun Tabel pikeun Nadoman ngarah posisi kénca-katuhu aman di mode print
-                const nadoDiv = document.createElement('div');
-                nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-2 border-t border-b border-gray-400 py-1 space-y-0.5 elemen-cetak-tunggal";
-                nadoDiv.innerHTML = `
-                    <table class="w-full text-[11px] border-b border-dotted border-gray-300 px-1" style="table-layout: fixed; width: 100%;">
-                        <tr>
-                            <td class="text-left font-medium text-slate-900 align-top" style="width: 47%; word-wrap: break-word;">${item.bait1 || '&nbsp;'}</td>
-                            <td class="text-center font-bold text-gray-400 align-top" style="width: 6%;">#</td>
-                            <td class="text-left font-medium text-slate-900 align-top" style="width: 47%; word-wrap: break-word;">${item.bait2 || '&nbsp;'}</td>
-                        </tr>
-                    </table>`;
-                wadahBlokKonten.appendChild(nadoDiv);
-
-            } else if (item.tipe === 'bandongan') {
-                // 🛠️ PERBAIKAN 2: Paksa inline CSS w-[20%] ngarah teu ka-override nalika nyetak
-                const boxBandongan = document.createElement('div');
-                boxBandongan.className = "border-r border-b border-gray-300 p-1 text-center bg-white min-h-[95px] elemen-cetak-tunggal kotak-bandongan-satuan box-border";
-                
-                // Setel gaya penting ieu liwat JavaScript pikeun meungpeuk CSS bawaan browser cetak
-                boxBandongan.style.setProperty('width', '20%', 'important');
-                boxBandongan.style.setProperty('flex', '0 0 20%', 'important');
-                boxBandongan.style.setProperty('display', 'flex', 'important');
-                boxBandongan.style.setProperty('flex-direction', 'column', 'important');
-                boxBandongan.style.setProperty('justify-content', 'space-between', 'important');
-                boxBandongan.style.setProperty('align-items', 'center', 'important');
-
-                boxBandongan.innerHTML = `
-                    <span class="text-[8px] text-gray-400 italic font-sans block w-full" style="direction: ltr;">${item.luhur || '&nbsp;'}</span>
-                    <span class="font-arab text-base font-bold text-slate-900 leading-normal my-auto block w-full">${item.arab || '&nbsp;'}</span>
-                    <span class="text-[8px] text-slate-600 font-sans block w-full" style="direction: ltr;">${item.sunda || '&nbsp;'}</span>
-                `;
-                wadahBlokKonten.appendChild(boxBandongan);
-            }
-        });
-
-        if (fasal.rangkuman && fasal.rangkuman.trim()) {
-            let barisTeks = fasal.rangkuman.split('\n');
-            let htmlBarisRangkuman = '';
-            barisTeks.forEach((baris) => {
-                let styleIndent = /^\s*\d+\./.test(baris.trim()) ? 'padding-left: 24px;' : '';
-                htmlBarisRangkuman += `<div class="text-[11px] font-sans text-slate-900 tracking-wide font-medium" style="${styleIndent}">${baris}</div>`;
-            });
-
-            const rangkumanDiv = document.createElement('div');
-            rangkumanDiv.className = "w-full mt-4 mb-2 font-sans elemen-cetak-tunggal";
-            rangkumanDiv.innerHTML = `
-                <div class="text-xs font-bold text-slate-950 uppercase underline tracking-wider mb-1">RANGKUMAN</div>
-                <div class="wadah-rangkuman-cetak border-t border-gray-300">
-                    ${htmlBarisRangkuman}
-                </div>
-            `;
-            wadahBlokKonten.appendChild(rangkumanDiv);
-        }
-    });
-
-    let wadahKoleksiHalamanMentah = [];
-    let nomorHalamanVirtual = 1;
-
-    let halamanDOMVirtual = buatHalamanDOMVirtual(nomorHalamanVirtual);
-    wadahKertas.appendChild(halamanDOMVirtual); 
-    let targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
-
-    const TINGGI_MAKSIMAL = 690; 
-    const kumpulanElemen = Array.from(wadahBlokKonten.children);
-
-    let gridOtomatisSekarang = null;
-
-    // 🛠️ PERBAIKAN 3: Robah grid-cols-5 jadi flex, force justify-center
-    function jieunGridAnyar() {
-        const gridDiv = document.createElement('div');
-        gridDiv.className = "border-t border-l border-gray-300 my-2 wadah-grid-induk w-full";
-        gridDiv.style.direction = "rtl";
-        
-        // Maksa ngagunakeun flex tur nengahkeun (center) di print preview
-        gridDiv.style.setProperty('display', 'flex', 'important');
-        gridDiv.style.setProperty('flex-wrap', 'wrap', 'important');
-        gridDiv.style.setProperty('justify-content', 'center', 'important');
-        
-        targetDiv.appendChild(gridDiv);
-        gridOtomatisSekarang = gridDiv;
-    }
-
-    kumpulanElemen.forEach((el) => {
-        let nodeKlon = el.cloneNode(true);
-        
-        if (nodeKlon.classList.contains('kotak-bandongan-satuan')) {
-            if (!gridOtomatisSekarang) {
-                jieunGridAnyar();
-            }
-            gridOtomatisSekarang.appendChild(nodeKlon);
-        } else {
-            gridOtomatisSekarang = null;
-            targetDiv.appendChild(nodeKlon);
-        }
-
-        if (targetDiv.offsetHeight > TINGGI_MAKSIMAL) {
-            if (nodeKlon.classList.contains('kotak-bandongan-satuan') && gridOtomatisSekarang) {
-                gridOtomatisSekarang.removeChild(nodeKlon);
-                if (gridOtomatisSekarang.children.length === 0) gridOtomatisSekarang.remove();
-            } else {
-                targetDiv.removeChild(nodeKlon);
-            }
-
-            wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
-            halamanDOMVirtual.remove();
-
-            nomorHalamanVirtual++;
-            halamanDOMVirtual = buatHalamanDOMVirtual(nomorHalamanVirtual);
-            wadahKertas.appendChild(halamanDOMVirtual);
-            targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
-            
-            nodeKlon = el.cloneNode(true);
-            if (nodeKlon.classList.contains('kotak-bandongan-satuan')) {
-                jieunGridAnyar();
-                gridOtomatisSekarang.appendChild(nodeKlon);
-            } else {
-                gridOtomatisSekarang = null;
-                targetDiv.appendChild(nodeKlon);
-            }
-        }
-    });
-
-    wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
-    halamanDOMVirtual.remove();
     
-    wadahKertas.innerHTML = ''; 
-    document.body.removeChild(wadahBlokKonten);
+</div>
 
-    while (wadahKoleksiHalamanMentah.length % 4 !== 0) {
-        nomorHalamanVirtual++;
-        let blankPage = buatHalamanDOMVirtual(nomorHalamanVirtual);
-        blankPage.querySelector('.isi-konten-halaman').innerHTML = `<div class="text-center text-gray-300 italic pt-24 text-xs">[Catetan Kosong]</div>`;
-        wadahKoleksiHalamanMentah.push(blankPage.innerHTML);
-    }
-
-    let totalHalaman = wadahKoleksiHalamanMentah.length;
-    for (let i = 0; i < totalHalaman / 4; i++) {
-        let depanKiri = totalHalaman - 1 - (i * 2), depanKanan = 0 + (i * 2);
-        let lembarF4Depan = document.createElement('div');
-        lembarF4Depan.className = "lembar-f4-cetak";
-        lembarF4Depan.innerHTML = `
-            <div class="garis-lipat"></div>
-            <div class="sub-halaman border-r border-gray-100">${wadahKoleksiHalamanMentah[depanKiri]}</div>
-            <div class="sub-halaman">${wadahKoleksiHalamanMentah[depanKanan]}</div>
-        `;
-        wadahKertas.appendChild(lembarF4Depan);
-
-        let belakangKiri = 1 + (i * 2), belakangKanan = totalHalaman - 2 - (i * 2);
-        let lembarF4Belakang = document.createElement('div');
-        lembarF4Belakang.className = "lembar-f4-cetak";
-        lembarF4Belakang.innerHTML = `
-            <div class="garis-lipat"></div>
-            <div class="sub-halaman border-r border-gray-100">${wadahKoleksiHalamanMentah[belakangKiri]}</div>
-            <div class="sub-halaman">${wadahKoleksiHalamanMentah[belakangKanan]}</div>
-        `;
-        wadahKertas.appendChild(lembarF4Belakang);
-    }
-
-    const panelPreview = document.getElementById('wadah-kertas-cetak')?.parentElement;
-    if (panelPreview) {
-        panelPreview.scrollTop = panelPreview.scrollHeight;
-    }
-}
-
-        function buatHalamanDOMVirtual(no) {
-            const tempDiv = document.createElement('div');
-            tempDiv.className = "w-full h-full flex flex-col justify-between";
-            tempDiv.innerHTML = `
-                <div class="isi-konten-halaman flex-1 overflow-hidden"></div>
-                <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-1 mt-1 flex justify-between px-1">
-                    <span>Kitab Safinah</span>
-                    <span class="font-bold text-slate-800 text-[10px] bg-slate-100 px-2 rounded-full">- ${no} -</span>
-                    <span>Matan, Lughot, Ringkesan & Nadoman</span>
-                </div>
-            `;
-            return tempDiv; // Parantos ditambahkeun return element DOM na di dieu
+<script>
+    let kitabData = [
+        {
+            nama: "MUQODDIMAH",
+            rangkuman: "❖ Rukun Islam aya 5 perkara.",
+            dicitak: true,
+            baris: [
+                { tipe: "arabfull", teks: "بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ" }
+            ]
         }
+    ];
 
-        window.onload = function() { 
-            bukaFasalAktip(); 
-            toggleAccordion('acc-rangkuman', 'panah-rangkuman');
-        };
+    let indexFasalAktip = 0;
+    let indexBarisAktip = 0;
+    let barisNuKeurDiDrag = null;
+    let modeCetak = "sadaya";
 
-        function cetakBuku(mode) {
-        // 1. Setel mode dumasar tombol anu diklik ('sadaya' atanapi 'terpilih')
-        modeCetak = mode;
-        
-        // 2. Jalankeun ulang render booklet supados halaman nu teu dipiliha ngaleungit samentawis
-        prosesTeksMenjadiBooklet();
-        
-        // 3. Pasihan jeda sakedap (50ms) supados DOM rengse nyusun, teras buka jandela cetak
-        setTimeout(() => {
-            window.print();
-        }, 50);
-    }
-
-    // Fungsi pikeun maca file JSON anu dipilih tina komputer
-    function prosesImporJson(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                // Robah eusi file janten objek JavaScript (Array / JSON)
-                const hasilJson = JSON.parse(e.target.result);
-                
-                // Lebetkeun kana variabel utama aplikasi anjeun (contona: kitabData)
-                kitabData = hasilJson;
-                indexFasalAktip = 0;
-                indexBarisAktip = 0;
-                
-                // Témbongkeun data kana layar/editor
-                if (typeof bukaFasalAktip === 'function') {
-                    bukaFasalAktip();
-                }
-                
-                alert("Alhamdulillah, data JSON suksés dimuat kana aplikasi! Salajengna mangga klik 'Simpan ka DB'.");
-            } catch (error) {
-                console.error(error);
-                alert("Gagal membaca file JSON! Pastikeun format file-na leres.");
-            }
-        };
-        reader.readAsText(file);
-    }
-
-   // URL Web App ti Google Apps Script anjeun
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwILJ2fnC-mfCd7eSQnUS7V9nq260zN0-kHl6uxbExOC9e4vZ_k6LPIjdqwOVct4ER1BA/exec";
-
-    // Variabel pikeun nahan data dumasar kitab
+    // Variabel Database Kitab & Kitab Aktip
     let databaseKitab = {
         safinah: JSON.parse(JSON.stringify(kitabData)),
         tijan: [],
@@ -899,9 +290,253 @@
     };
     let kitabAktip = 'safinah';
 
-    // 1. Fungsi Simpan kana Google Spreadsheet
+    // URL Web App Google Apps Script
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwILJ2fnC-mfCd7eSQnUS7V9nq260zN0-kHl6uxbExOC9e4vZ_k6LPIjdqwOVct4ER1BA/exec";
+
+    function toggleAccordion(idKonten, idPanah) {
+        const konten = document.getElementById(idKonten);
+        const panah = document.getElementById(idPanah);
+        if (!konten || !panah) return;
+        if (konten.classList.contains('tutup')) {
+            konten.classList.remove('tutup');
+            panah.style.transform = 'rotate(0deg)';
+        } else {
+            konten.classList.add('tutup');
+            panah.style.transform = 'rotate(-90deg)';
+        }
+    }
+
+    function renderTabFasal() {
+        const wadahTab = document.getElementById('wadah-tab-fasal');
+        if (!wadahTab) return;
+        wadahTab.innerHTML = '';
+        
+        kitabData.forEach((fasal, idx) => {
+            const rowTab = document.createElement('div');
+            rowTab.className = `flex items-center justify-between p-1 rounded border transition ${idx === indexFasalAktip ? 'bg-slate-800 border-indigo-500' : 'bg-slate-900 border-slate-800'}`;
+            
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.checked = fasal.dicitak === undefined ? true : fasal.dicitak;
+
+            cb.addEventListener("change", function (e) {
+                e.stopPropagation();
+                kitabData[idx].dicitak = this.checked;
+                if (modeCetak === "terpilih") {
+                    prosesTeksMenjadiBooklet();
+                }
+            });
+
+            const btn = document.createElement('button');
+            btn.className = `flex-1 text-left text-[11px] font-bold truncate transition cursor-pointer ${idx === indexFasalAktip ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'}`;
+            btn.textContent = `${idx + 1}. ${fasal.nama || 'TANPA NAMA'}`;
+            btn.onclick = () => {
+                indexFasalAktip = idx;
+                indexBarisAktip = 0;
+                bukaFasalAktip();
+            };
+
+            rowTab.appendChild(cb);
+            rowTab.appendChild(btn);
+            wadahTab.appendChild(rowTab);
+        });
+        const inputNama = document.getElementById('edit-nama-fasal');
+        if (inputNama) inputNama.value = kitabData[indexFasalAktip].nama;
+    }
+
+    function tambahFasalEnggal() {
+        const namaAnyar = "FASAL " + (kitabData.length + 1);
+        kitabData.push({ nama: namaAnyar, rangkuman: "", dicitak: true, baris: [] });
+        indexFasalAktip = kitabData.length - 1;
+        indexBarisAktip = 0;
+        bukaFasalAktip();
+    }
+
+    function gantiNamaFasalAktip(val) {
+        kitabData[indexFasalAktip].nama = val.toUpperCase();
+        renderTabFasal();
+        prosesTeksMenjadiBooklet();
+    }
+
+    function hapusFasalAktip() {
+        if (kitabData.length > 1) {
+            kitabData.splice(indexFasalAktip, 1);
+            indexFasalAktip = Math.max(0, indexFasalAktip - 1);
+            indexBarisAktip = 0;
+            bukaFasalAktip();
+        } else {
+            alert("Teu tiasa dihapus!");
+        }
+    }
+
+    function updateRangkumanFasal(val) {
+        kitabData[indexFasalAktip].rangkuman = val;
+        prosesTeksMenjadiBooklet();
+    }
+
+    function bukaFasalAktip() {
+        renderTabFasal();
+        const inputRangkuman = document.getElementById('input-rangkuman-fasal');
+        if (inputRangkuman) inputRangkuman.value = kitabData[indexFasalAktip].rangkuman || "";
+        renderBarisInput();
+        prosesTeksMenjadiBooklet();
+    }
+
+    function selipkanLafadzKeBandongan(indexArabFull, lafadz) {
+        const barisFasal = kitabData[indexFasalAktip].baris;
+        
+        if (barisFasal[indexBarisAktip] && barisFasal[indexBarisAktip].tipe === "bandongan") {
+            let barisAktip = barisFasal[indexBarisAktip];
+            barisAktip.arab = barisAktip.arab ? barisAktip.arab.trim() + " " + lafadz.trim() : lafadz.trim();
+        } else if (barisFasal[indexArabFull + 1] && barisFasal[indexArabFull + 1].tipe === "bandongan") {
+            let barisHandap = barisFasal[indexArabFull + 1];
+            barisHandap.arab = barisHandap.arab ? barisHandap.arab.trim() + " " + lafadz.trim() : lafadz.trim();
+            indexBarisAktip = indexArabFull + 1;
+        } else {
+            const barisAnyar = { tipe: "bandongan", luhur: "", arab: lafadz.trim(), sunda: "" };
+            barisFasal.splice(indexArabFull + 1, 0, barisAnyar);
+            indexBarisAktip = indexArabFull + 1;
+        }
+        renderBarisInput();
+        prosesTeksMenjadiBooklet();
+    }
+
+    function buatVisualLafadzKlik(teks, indexBaris) {
+        if (!teks || teks.trim() === "") {
+            return `<span class="text-slate-500 italic text-[11px]">Ketikkeun teks arab di kolom handap...</span>`;
+        }
+        const kumpulanKecap = teks.split(/(\s+)/);
+        const hasil = kumpulanKecap.map(item => {
+            if (item.trim() === "") return item;
+            return `<span class="lafadz-klik font-arab text-lg font-bold text-emerald-400 cursor-pointer" onclick="selipkanLafadzKeBandongan(${indexBaris}, '${item.replace(/'/g, "\\'")}')">${item}</span>`;
+        }).join('');
+        return `<div dir="rtl" class="text-right">${hasil}</div>`;
+    }
+
+    function renderBarisInput() {
+        const wadah = document.getElementById('wadah-baris-input');
+        if (!wadah) return;
+        wadah.innerHTML = '';
+        const dataBaris = kitabData[indexFasalAktip].baris;
+
+        dataBaris.forEach((item, index) => {
+            const row = document.createElement('div');
+            row.className = `flex gap-1.5 items-center p-1 bg-slate-900/50 rounded border transition ${index === indexBarisAktip ? 'border-amber-500 bg-slate-800/80 ring-1 ring-amber-500/30' : 'border-slate-800'}`;
+            row.setAttribute('draggable', 'true');
+            row.setAttribute('data-index', index);
+            
+            row.onclick = () => { setBarisAktip(index); };
+            row.addEventListener('dragstart', handleDragStart);
+            row.addEventListener('dragover', handleDragOver);
+            row.addEventListener('drop', handleDrop);
+            row.addEventListener('dragend', handleDragEnd);
+
+            let htmlKontenInput = '';
+            if (item.tipe === 'arabfull') {
+                const visualLafadz = buatVisualLafadzKlik(item.teks, index);
+                htmlKontenInput = `
+                    <div class="w-[16%] flex flex-col justify-center">
+                        <span class="text-[10px] font-bold text-emerald-400 uppercase block">Arab Full</span>
+                        <span class="text-[8px] text-slate-400 font-sans leading-tight">Klik lafadz pikeun gabung ka handap 👇</span>
+                    </div>
+                    <div class="w-[72%] flex flex-col gap-1.5 bg-slate-950 p-2 rounded border border-emerald-900">
+                        <div class="p-1.5 bg-slate-900 rounded border border-slate-800 text-right min-h-[36px] flex flex-row-reverse flex-wrap gap-x-1 items-center" style="direction: rtl;">
+                            ${visualLafadz}
+                        </div>
+                        <input type="text" value="${item.teks || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataArabFull(${index}, this.value)" class="w-full p-1 bg-slate-900 text-slate-100 font-arab text-sm text-right rounded border border-slate-700 focus:border-emerald-500" placeholder="Ketik/Paste Teks Arab Full di dieu...">
+                    </div>
+                `;
+            } else if (item.tipe === 'nadoman') {
+                htmlKontenInput = `
+                    <div class="w-[16%] text-[10px] font-bold text-cyan-400 uppercase">Nadoman</div>
+                    <div class="w-[72%] flex gap-1 bg-slate-950 p-1 rounded border border-slate-800">
+                        <input type="text" value="${item.bait1 || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataNadoman(${index}, 'bait1', this.value)" class="w-1/2 p-1 bg-slate-900 text-slate-100 text-xs rounded border border-slate-700" placeholder="Padalisan 1">
+                        <input type="text" value="${item.bait2 || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataNadoman(${index}, 'bait2', this.value)" class="w-1/2 p-1 bg-slate-900 text-slate-100 text-xs rounded border border-slate-700" placeholder="Padalisan 2">
+                    </div>
+                `;
+            } else {
+                htmlKontenInput = `
+                    <div class="w-[16%] text-[10px] font-bold text-amber-400 uppercase">Bandongan</div>
+                    <div class="w-[72%] flex gap-1">
+                        <input type="text" value="${item.luhur || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataBandongan(${index}, 'luhur', this.value)" class="w-1/3 p-1 bg-slate-950 text-slate-100 text-[10px] italic rounded border border-slate-700" placeholder="Luhur">
+                        <input type="text" value="${item.arab || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataBandongan(${index}, 'arab', this.value)" class="w-1/3 p-1 bg-slate-950 text-slate-100 font-arab text-sm text-right rounded border border-slate-700" placeholder="Arab">
+                        <input type="text" value="${item.sunda || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataBandongan(${index}, 'sunda', this.value)" class="w-1/3 p-1 bg-slate-950 text-slate-100 text-[10px] rounded border border-slate-700" placeholder="Sunda">
+                    </div>
+                `;
+            }
+
+            row.innerHTML = `
+                <div class="w-[6%] text-center cursor-grab text-slate-500 font-bold select-none text-xs">☰</div>
+                ${htmlKontenInput}
+                <div class="w-[6%] text-center"><button onclick="event.stopPropagation(); hapusBaris(${index})" class="text-red-400 text-xs font-bold cursor-pointer">✕</button></div>
+            `;
+            wadah.appendChild(row);
+        });
+    }
+
+    function updateDataArabFull(idx, val) { 
+        kitabData[indexFasalAktip].baris[idx].teks = val; 
+        const wadah = document.getElementById('wadah-baris-input');
+        if(wadah && wadah.children[idx]) {
+            const visualBox = wadah.children[idx].querySelector('.bg-slate-950 > div');
+            if(visualBox) visualBox.innerHTML = buatVisualLafadzKlik(val, idx);
+        }
+        prosesTeksMenjadiBooklet(); 
+    }
+    
+    function updateDataBandongan(idx, field, val) { kitabData[indexFasalAktip].baris[idx][field] = val; prosesTeksMenjadiBooklet(); }
+    function updateDataNadoman(idx, field, val) { kitabData[indexFasalAktip].baris[idx][field] = val; prosesTeksMenjadiBooklet(); }
+    
+    function setBarisAktip(index) { 
+        indexBarisAktip = index; 
+        const wadah = document.getElementById('wadah-baris-input');
+        if(!wadah) return;
+        Array.from(wadah.children).forEach((child, idx) => {
+            if(idx === index) {
+                child.className = `flex gap-1.5 items-center p-1 bg-slate-800/80 rounded border border-amber-500 ring-1 ring-amber-500/30 transition`;
+            } else {
+                child.className = `flex gap-1.5 items-center p-1 bg-slate-900/50 rounded border border-slate-800 transition`;
+            }
+        });
+    }
+    
+    function tambahBaris(tipe) {
+        if(tipe === 'arabfull') kitabData[indexFasalAktip].baris.push({ tipe: "arabfull", teks: "" });
+        else if(tipe === 'nadoman') kitabData[indexFasalAktip].baris.push({ tipe: "nadoman", bait1: "", bait2: "" });
+        else kitabData[indexFasalAktip].baris.push({ tipe: "bandongan", luhur: "", arab: "", sunda: "" });
+        
+        indexBarisAktip = kitabData[indexFasalAktip].baris.length - 1;
+        renderBarisInput();
+        prosesTeksMenjadiBooklet();
+    }
+
+    function hapusBaris(index) {
+        kitabData[indexFasalAktip].baris.splice(index, 1);
+        indexBarisAktip = Math.max(0, index - 1);
+        renderBarisInput();
+        prosesTeksMenjadiBooklet();
+    }
+
+    function handleDragStart(e) { barisNuKeurDiDrag = this; this.classList.add('baris-dragged'); }
+    function handleDragOver(e) { if (e.preventDefault) e.preventDefault(); return false; }
+    function handleDrop(e) {
+        const indexAsal = parseInt(barisNuKeurDiDrag.getAttribute('data-index'));
+        const indexTujuan = parseInt(this.getAttribute('data-index'));
+        if (indexAsal !== indexTujuan) {
+            const moved = kitabData[indexFasalAktip].baris.splice(indexAsal, 1)[0];
+            kitabData[indexFasalAktip].baris.splice(indexTujuan, 0, moved);
+            indexBarisAktip = indexTujuan;
+            renderBarisInput();
+            prosesTeksMenjadiBooklet();
+        }
+        return false;
+    }
+    function handleDragEnd() { renderBarisInput(); }
+
+    // ==========================================
+    // FUNGSI DATABASE & PILIHAN KITAB (DILERESKEUN)
+    // ==========================================
     function simpanKeDatabase() {
-        // Simpen heula data ayeuna kana databaseKitab
         databaseKitab[kitabAktip] = kitabData;
 
         let payload = {
@@ -923,7 +558,6 @@
         });
     }
 
-    // 2. Fungsi Muat / Buka ti Google Spreadsheet
     function bukaDariDatabase() {
         fetch(WEB_APP_URL + "?action=muat&kitab=" + kitabAktip)
         .then(response => response.json())
@@ -945,15 +579,10 @@
         });
     }
 
-    // 3. Fungsi Nalika Dropdown Kitab Diganti
     function gantiKitabAktip(namaKitab) {
-        // Simpen heula data kitab lami
         databaseKitab[kitabAktip] = kitabData;
-
-        // Pindah kana kitab énggal
         kitabAktip = namaKitab;
 
-        // Muat data kitab énggal (upami kosong, jieun format awal)
         if (databaseKitab[kitabAktip] && databaseKitab[kitabAktip].length > 0) {
             kitabData = databaseKitab[kitabAktip];
         } else {
@@ -971,6 +600,234 @@
         indexFasalAktip = 0;
         indexBarisAktip = 0;
         bukaFasalAktip();
+    }
+    // ==========================================
+
+    function prosesTeksMenjadiBooklet() {
+        const wadahKertas = document.getElementById('wadah-kertas-cetak');
+        const txtJudulPreview = document.getElementById('judul-preview');
+        if (!wadahKertas) return;
+        wadahKertas.innerHTML = ''; 
+
+        if(txtJudulPreview) {
+            txtJudulPreview.textContent = modeCetak === "terpilih" ? "Sawangan Cetak Buku (Ngan Fasal Nu Dipilih)" : "Sawangan Cetak Buku (Sadaya Fasal Ngagabung)";
+        }
+
+        const dataFasalDiProses = kitabData.filter(fasal => modeCetak === "sadaya" || fasal.dicitak !== false);
+
+        if(dataFasalDiProses.length === 0) {
+            wadahKertas.innerHTML = '<div class="text-center text-slate-500 py-12 text-xs">[Ulah hilap nyeklis fasal dina daptar pikeun dicitak]</div>';
+            return;
+        }
+
+        const wadahBlokKonten = document.createElement('div');
+        wadahBlokKonten.style.width = '141mm';
+        wadahBlokKonten.className = "font-sans text-slate-900 text-left invisible absolute top-0 left-0";
+        document.body.appendChild(wadahBlokKonten);
+
+        dataFasalDiProses.forEach((fasal) => {
+            const judulDiv = document.createElement('div');
+            judulDiv.className = "w-full text-center my-2 border-b-2 border-slate-900 pb-0.5 elemen-cetak-tunggal";
+            judulDiv.innerHTML = `<h2 class="text-xs font-extrabold tracking-wider text-slate-900 font-sans uppercase">${fasal.nama}</h2>`;
+            wadahBlokKonten.appendChild(judulDiv);
+
+            fasal.baris.forEach((item) => {
+                if (item.tipe === 'arabfull') {
+                    if (item.teks && item.teks.trim()) {
+                        const arabDiv = document.createElement('div');
+                        arabDiv.className = "w-full text-center px-1 my-3 elemen-cetak-tunggal";
+                        arabDiv.innerHTML = `<p class="font-arab text-xl font-medium leading-loose text-slate-950 tracking-wide text-center">${item.teks}</p>`;
+                        wadahBlokKonten.appendChild(arabDiv);
+                    }
+                } else if (item.tipe === 'nadoman') {
+                    const nadoDiv = document.createElement('div');
+                    nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-2 border-t border-b border-gray-400 py-1 space-y-0.5 elemen-cetak-tunggal";
+                    nadoDiv.innerHTML = `
+                        <table class="w-full text-[11px] border-b border-dotted border-gray-300 px-1" style="table-layout: fixed; width: 100%;">
+                            <tr>
+                                <td class="text-left font-medium text-slate-900 align-top" style="width: 47%; word-wrap: break-word;">${item.bait1 || '&nbsp;'}</td>
+                                <td class="text-center font-bold text-gray-400 align-top" style="width: 6%;">#</td>
+                                <td class="text-left font-medium text-slate-900 align-top" style="width: 47%; word-wrap: break-word;">${item.bait2 || '&nbsp;'}</td>
+                            </tr>
+                        </table>`;
+                    wadahBlokKonten.appendChild(nadoDiv);
+                } else if (item.tipe === 'bandongan') {
+                    const boxBandongan = document.createElement('div');
+                    boxBandongan.className = "border-r border-b border-gray-300 p-1 text-center bg-white min-h-[95px] elemen-cetak-tunggal kotak-bandongan-satuan box-border";
+                    
+                    boxBandongan.style.setProperty('width', '20%', 'important');
+                    boxBandongan.style.setProperty('flex', '0 0 20%', 'important');
+                    boxBandongan.style.setProperty('display', 'flex', 'important');
+                    boxBandongan.style.setProperty('flex-direction', 'column', 'important');
+                    boxBandongan.style.setProperty('justify-content', 'space-between', 'important');
+                    boxBandongan.style.setProperty('align-items', 'center', 'important');
+
+                    boxBandongan.innerHTML = `
+                        <span class="text-[8px] text-gray-400 italic font-sans block w-full" style="direction: ltr;">${item.luhur || '&nbsp;'}</span>
+                        <span class="font-arab text-base font-bold text-slate-900 leading-normal my-auto block w-full">${item.arab || '&nbsp;'}</span>
+                        <span class="text-[8px] text-slate-600 font-sans block w-full" style="direction: ltr;">${item.sunda || '&nbsp;'}</span>
+                    `;
+                    wadahBlokKonten.appendChild(boxBandongan);
+                }
+            });
+
+            if (fasal.rangkuman && fasal.rangkuman.trim()) {
+                let barisTeks = fasal.rangkuman.split('\n');
+                let htmlBarisRangkuman = '';
+                barisTeks.forEach((baris) => {
+                    let styleIndent = /^\s*\d+\./.test(baris.trim()) ? 'padding-left: 24px;' : '';
+                    htmlBarisRangkuman += `<div class="text-[11px] font-sans text-slate-900 tracking-wide font-medium" style="${styleIndent}">${baris}</div>`;
+                });
+
+                const rangkumanDiv = document.createElement('div');
+                rangkumanDiv.className = "w-full mt-4 mb-2 font-sans elemen-cetak-tunggal";
+                rangkumanDiv.innerHTML = `
+                    <div class="text-xs font-bold text-slate-950 uppercase underline tracking-wider mb-1">RANGKUMAN</div>
+                    <div class="wadah-rangkuman-cetak border-t border-gray-300">
+                        ${htmlBarisRangkuman}
+                    </div>
+                `;
+                wadahBlokKonten.appendChild(rangkumanDiv);
+            }
+        });
+
+        let wadahKoleksiHalamanMentah = [];
+        let nomorHalamanVirtual = 1;
+        let halamanDOMVirtual = buatHalamanDOMVirtual(nomorHalamanVirtual);
+        wadahKertas.appendChild(halamanDOMVirtual); 
+        let targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
+
+        const TINGGI_MAKSIMAL = 690; 
+        const kumpulanElemen = Array.from(wadahBlokKonten.children);
+        let gridOtomatisSekarang = null;
+
+        function jieunGridAnyar() {
+            const gridDiv = document.createElement('div');
+            gridDiv.className = "border-t border-l border-gray-300 my-2 wadah-grid-induk w-full";
+            gridDiv.style.direction = "rtl";
+            gridDiv.style.setProperty('display', 'flex', 'important');
+            gridDiv.style.setProperty('flex-wrap', 'wrap', 'important');
+            gridDiv.style.setProperty('justify-content', 'center', 'important');
+            targetDiv.appendChild(gridDiv);
+            gridOtomatisSekarang = gridDiv;
+        }
+
+        kumpulanElemen.forEach((el) => {
+            let nodeKlon = el.cloneNode(true);
+            if (nodeKlon.classList.contains('kotak-bandongan-satuan')) {
+                if (!gridOtomatisSekarang) { jieunGridAnyar(); }
+                gridOtomatisSekarang.appendChild(nodeKlon);
+            } else {
+                gridOtomatisSekarang = null;
+                targetDiv.appendChild(nodeKlon);
+            }
+
+            if (targetDiv.offsetHeight > TINGGI_MAKSIMAL) {
+                if (nodeKlon.classList.contains('kotak-bandongan-satuan') && gridOtomatisSekarang) {
+                    gridOtomatisSekarang.removeChild(nodeKlon);
+                    if (gridOtomatisSekarang.children.length === 0) gridOtomatisSekarang.remove();
+                } else {
+                    targetDiv.removeChild(nodeKlon);
+                }
+
+                wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
+                halamanDOMVirtual.remove();
+
+                nomorHalamanVirtual++;
+                halamanDOMVirtual = buatHalamanDOMVirtual(nomorHalamanVirtual);
+                wadahKertas.appendChild(halamanDOMVirtual);
+                targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
+                
+                nodeKlon = el.cloneNode(true);
+                if (nodeKlon.classList.contains('kotak-bandongan-satuan')) {
+                    jieunGridAnyar();
+                    gridOtomatisSekarang.appendChild(nodeKlon);
+                } else {
+                    gridOtomatisSekarang = null;
+                    targetDiv.appendChild(nodeKlon);
+                }
+            }
+        });
+
+        wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
+        halamanDOMVirtual.remove();
+        document.body.removeChild(wadahBlokKonten);
+
+        while (wadahKoleksiHalamanMentah.length % 4 !== 0) {
+            nomorHalamanVirtual++;
+            let blankPage = buatHalamanDOMVirtual(nomorHalamanVirtual);
+            blankPage.querySelector('.isi-konten-halaman').innerHTML = `<div class="text-center text-gray-300 italic pt-24 text-xs">[Catetan Kosong]</div>`;
+            wadahKoleksiHalamanMentah.push(blankPage.innerHTML);
+        }
+
+        let totalHalaman = wadahKoleksiHalamanMentah.length;
+        for (let i = 0; i < totalHalaman / 4; i++) {
+            let depanKiri = totalHalaman - 1 - (i * 2), depanKanan = 0 + (i * 2);
+            let lembarF4Depan = document.createElement('div');
+            lembarF4Depan.className = "lembar-f4-cetak";
+            lembarF4Depan.innerHTML = `
+                <div class="garis-lipat"></div>
+                <div class="sub-halaman border-r border-gray-100">${wadahKoleksiHalamanMentah[depanKiri]}</div>
+                <div class="sub-halaman">${wadahKoleksiHalamanMentah[depanKanan]}</div>
+            `;
+            wadahKertas.appendChild(lembarF4Depan);
+
+            let belakangKiri = 1 + (i * 2), belakangKanan = totalHalaman - 2 - (i * 2);
+            let lembarF4Belakang = document.createElement('div');
+            lembarF4Belakang.className = "lembar-f4-cetak";
+            lembarF4Belakang.innerHTML = `
+                <div class="garis-lipat"></div>
+                <div class="sub-halaman border-r border-gray-100">${wadahKoleksiHalamanMentah[belakangKiri]}</div>
+                <div class="sub-halaman">${wadahKoleksiHalamanMentah[belakangKanan]}</div>
+            `;
+            wadahKertas.appendChild(lembarF4Belakang);
+        }
+    }
+
+    function buatHalamanDOMVirtual(no) {
+        const tempDiv = document.createElement('div');
+        tempDiv.className = "w-full h-full flex flex-col justify-between";
+        tempDiv.innerHTML = `
+            <div class="isi-konten-halaman flex-1 overflow-hidden"></div>
+            <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-1 mt-1 flex justify-between px-1">
+                <span>Kitab Studio</span>
+                <span class="font-bold text-slate-800 text-[10px] bg-slate-100 px-2 rounded-full">- ${no} -</span>
+                <span>Matan, Lughot, Ringkesan & Nadoman</span>
+            </div>
+        `;
+        return tempDiv;
+    }
+
+    window.onload = function() { 
+        bukaFasalAktip(); 
+        toggleAccordion('acc-rangkuman', 'panah-rangkuman');
+    };
+
+    function cetakBuku(mode) {
+        modeCetak = mode;
+        prosesTeksMenjadiBooklet();
+        setTimeout(() => { window.print(); }, 50);
+    }
+
+    function prosesImporJson(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const hasilJson = JSON.parse(e.target.result);
+                kitabData = hasilJson;
+                databaseKitab[kitabAktip] = kitabData;
+                indexFasalAktip = 0;
+                indexBarisAktip = 0;
+                bukaFasalAktip();
+                alert("Alhamdulillah, data JSON suksés dimuat kana aplikasi!");
+            } catch (error) {
+                alert("Gagal membaca file JSON! Pastikeun format file-na leres.");
+            }
+        };
+        reader.readAsText(file);
     }
 </script>
 </body>
