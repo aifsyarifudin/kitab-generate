@@ -888,37 +888,89 @@
         reader.readAsText(file);
     }
 
-    // Variabel pikeun nahan data per kitab
-    let databaseKitab = {
-        safinah: [], // Data Kitab Safinah anu tos aya
-        tijan: [],   // Data khusus Kitab Tijan
-        taqrib: []   // Data khusus Kitab Fathul Qarib
-    };
+   // URL Web App ti Google Apps Script anjeun
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwILJ2fnC-mfCd7eSQnUS7V9nq260zN0-kHl6uxbExOC9e4vZ_k6LPIjdqwOVct4ER1BA/exec";
 
+    // Variabel pikeun nahan data dumasar kitab
+    let databaseKitab = {
+        safinah: JSON.parse(JSON.stringify(kitabData)),
+        tijan: [],
+        taqrib: []
+    };
     let kitabAktip = 'safinah';
 
-    // Fungsi nalika dropdown kitab diganti
-    function gantiKitabAktip(namaKitab) {
-        // 1. Simpen heula data anu nuju dibuka ayeuna kana memori kitab lila
-        databaseKitab[kitabAktip] = [...daftarFasal]; // Asumsikeun daftarFasal téh array data aktif anjeun
+    // 1. Fungsi Simpan kana Google Spreadsheet
+    function simpanKeDatabase() {
+        // Simpen heula data ayeuna kana databaseKitab
+        databaseKitab[kitabAktip] = kitabData;
 
-        // 2. Pindahkeun kitab aktip
+        let payload = {
+            kitabAktip: kitabAktip,
+            dataFasal: kitabData
+        };
+
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.pesan);
+        })
+        .catch(error => {
+            console.error('Éror:', error);
+            alert("Gagal nyambung ka Spreadsheet!");
+        });
+    }
+
+    // 2. Fungsi Muat / Buka ti Google Spreadsheet
+    function bukaDariDatabase() {
+        fetch(WEB_APP_URL + "?action=muat&kitab=" + kitabAktip)
+        .then(response => response.json())
+        .then(data => {
+            if (data && Array.isArray(data) && data.length > 0) {
+                kitabData = data;
+                databaseKitab[kitabAktip] = kitabData;
+                indexFasalAktip = 0;
+                indexBarisAktip = 0;
+                bukaFasalAktip();
+                alert("Alhamdulillah, data suksés dimuat tina Database!");
+            } else {
+                alert("Teu acan aya data anu disimpen dina Spreadsheet pikeun kitab ieu.");
+            }
+        })
+        .catch(error => {
+            console.error('Éror:', error);
+            alert("Gagal ngamuat data ti Spreadsheet!");
+        });
+    }
+
+    // 3. Fungsi Nalika Dropdown Kitab Diganti
+    function gantiKitabAktip(namaKitab) {
+        // Simpen heula data kitab lami
+        databaseKitab[kitabAktip] = kitabData;
+
+        // Pindah kana kitab énggal
         kitabAktip = namaKitab;
 
-        // 3. Muat data kitab anu nolak dipilih
-        daftarFasal = databaseKitab[kitabAktip] || [];
-
-        // 4. Refresh tampilan aplikasi
-        renderDaptarFasal();
-        if(daftarFasal.length > 0) {
-            pilihFasal(0);
+        // Muat data kitab énggal (upami kosong, jieun format awal)
+        if (databaseKitab[kitabAktip] && databaseKitab[kitabAktip].length > 0) {
+            kitabData = databaseKitab[kitabAktip];
         } else {
-            // Kosongkeun upami kitab énggal encan eusi
-            document.getElementById('wadah-baris-input').innerHTML = '';
-            document.getElementById('input-rangkuman-fasal').value = '';
+            kitabData = [
+                {
+                    nama: "MUQODDIMAH " + kitabAktip.toUpperCase(),
+                    rangkuman: "",
+                    dicitak: true,
+                    baris: []
+                }
+            ];
+            databaseKitab[kitabAktip] = kitabData;
         }
-        
-        console.log("Ayeuna nuju ngédit kitab: " + kitabAktip);
+
+        indexFasalAktip = 0;
+        indexBarisAktip = 0;
+        bukaFasalAktip();
     }
 </script>
 </body>
