@@ -211,7 +211,16 @@
 
         <!-- WADAH EUSI NAVIGASI -->
         <div class="flex-1 p-4 overflow-y-auto space-y-3 pb-28">
-            
+            <!-- FITUR PILIHAN KITAB -->
+            <div class="bg-slate-950 p-2 rounded border border-slate-800 flex items-center justify-between gap-2 mb-2">
+                <span class="text-[11px] font-bold text-indigo-400 uppercase tracking-wider">📚 Kitab Aktip:</span>
+                <select id="pilihanKitab" onchange="gantiKitabAktip(this.value)" class="flex-1 p-1 bg-slate-900 text-slate-100 rounded border border-slate-700 text-xs focus:outline-none focus:border-indigo-500 font-bold">
+                    <option value="safinah">Kitab Safinah</option>
+                    <option value="tijan">Kitab Tijan ad-Darari</option>
+                    <option value="taqrib">Kitab Fathul Qarib</option>
+                </select>
+            </div>
+
             <!-- SECTION 1: MANAJEMEN FASAL -->
             <div class="bg-slate-900 rounded border border-slate-700 overflow-hidden">
                 <button onclick="toggleAccordion('acc-fasal', 'panah-fasal')" class="w-full flex justify-between items-center p-2.5 bg-slate-950/80 text-left cursor-pointer hover:bg-slate-950 transition">
@@ -568,11 +577,17 @@
         // URL Web App ti Google Apps Script anjeun
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwILJ2fnC-mfCd7eSQnUS7V9nq260zN0-kHl6uxbExOC9e4vZ_k6LPIjdqwOVct4ER1BA/exec";
 
-        // 1. Fungsi Simpan kana Google Spreadsheet
+        // 1. Fungsi Simpan kana Google Spreadsheet (Dumasar Kitab Aktip)
         function simpanKeDatabase() {
+            // Kumpulkeun data dumasar kitab anu nuju dipilih dina dropdown
+            let payload = {
+                kitabAktip: typeof kitabAktip !== 'undefined' ? kitabAktip : 'safinah',
+                dataFasal: typeof daftarFasal !== 'undefined' ? daftarFasal : []
+            };
+
             fetch(WEB_APP_URL, {
                 method: 'POST',
-                body: JSON.stringify(kitabData)
+                body: JSON.stringify(payload)
             })
             .then(response => response.json())
             .then(data => {
@@ -586,17 +601,19 @@
 
         // 2. Fungsi Muat / Buka ti Google Spreadsheet
         function bukaDariDatabase() {
-            fetch(WEB_APP_URL + "?action=muat")
+            let kitabDipilih = typeof kitabAktip !== 'undefined' ? kitabAktip : 'safinah';
+
+            fetch(WEB_APP_URL + "?action=muat&kitab=" + kitabDipilih)
             .then(response => response.json())
             .then(data => {
                 if (data && data.length > 0) {
-                    kitabData = data;
-                    indexFasalAktip = 0;
-                    indexBarisAktip = 0;
-                    bukaFasalAktip();
+                    daftarFasal = data;
+                    if (typeof indexFasalAktip !== 'undefined') indexFasalAktip = 0;
+                    if (typeof indexBarisAktip !== 'undefined') indexBarisAktip = 0;
+                    if (typeof bukaFasalAktip === 'function') bukaFasalAktip();
                     alert("Data suksés dimuat tina Google Spreadsheet!");
                 } else {
-                    alert("Teu aya data disimpen dina Spreadsheet.");
+                    alert("Teu aya data disimpen dina Spreadsheet pikeun kitab ieu.");
                 }
             })
             .catch(error => {
@@ -866,6 +883,39 @@
             }
         };
         reader.readAsText(file);
+    }
+
+    // Variabel pikeun nahan data per kitab
+    let databaseKitab = {
+        safinah: [], // Data Kitab Safinah anu tos aya
+        tijan: [],   // Data khusus Kitab Tijan
+        taqrib: []   // Data khusus Kitab Fathul Qarib
+    };
+
+    let kitabAktip = 'safinah';
+
+    // Fungsi nalika dropdown kitab diganti
+    function gantiKitabAktip(namaKitab) {
+        // 1. Simpen heula data anu nuju dibuka ayeuna kana memori kitab lila
+        databaseKitab[kitabAktip] = [...daftarFasal]; // Asumsikeun daftarFasal téh array data aktif anjeun
+
+        // 2. Pindahkeun kitab aktip
+        kitabAktip = namaKitab;
+
+        // 3. Muat data kitab anu nolak dipilih
+        daftarFasal = databaseKitab[kitabAktip] || [];
+
+        // 4. Refresh tampilan aplikasi
+        renderDaptarFasal();
+        if(daftarFasal.length > 0) {
+            pilihFasal(0);
+        } else {
+            // Kosongkeun upami kitab énggal encan eusi
+            document.getElementById('wadah-baris-input').innerHTML = '';
+            document.getElementById('input-rangkuman-fasal').value = '';
+        }
+        
+        console.log("Ayeuna nuju ngédit kitab: " + kitabAktip);
     }
 </script>
 </body>
