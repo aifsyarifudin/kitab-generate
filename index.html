@@ -160,113 +160,118 @@
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
 
-    <!-- WADAH UTAMA: Ngonci sangkan pas sagedé layar monitor (no global scroll) -->
-    <div class="flex w-full h-screen overflow-hidden">
+    <!-- WADAH UTAMA: Otomatis adaptif (Kolom kénca handap-luhur di HP, gigireun di Laptop) -->
+<div class="flex flex-col lg:flex-row w-full min-h-screen lg:h-screen overflow-y-auto lg:overflow-hidden bg-slate-900 text-slate-100">
         
-        <!-- ======================================================= -->
-        <!-- 1. PANEL INPUTAN (KENCA) - DIKONCI 480px PASTI MOAL NGESER -->
-        <!-- ======================================================= -->
-        <div style="width: 480px; min-width: 480px; max-width: 480px;" class="h-full bg-slate-800 flex flex-col border-r border-slate-700 no-print overflow-hidden">
-            
-            <!-- PANEL TOP BAR NU DIKUNCI (MOAL MILU KA-SCROLL) -->
-            <div class="bg-slate-900 border-b border-slate-700 shadow-lg p-3 space-y-3 z-30 flex-shrink-0">
-                <!-- HEADER UTAMA & TOMBOL UTAMA -->
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-sm font-bold text-indigo-400">Bandongan & Nadoman Studio</h1>
-                        <p class="text-[10px] text-slate-400">Klik kolom Bandongan heula, klik lafadz ti luhur.</p>
-                    </div>
-                    <div class="flex gap-1.5">
-                        <button onclick="simpanKabehFasal()" class="bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold py-1 px-2.5 rounded cursor-pointer transition">
-                            💾 Simpan Kitab
-                        </button>
-                        <label class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] font-bold py-1 px-2.5 rounded cursor-pointer transition">
-                            📂 Buka Kitab
-                            <input type="file" id="file-input" accept=".json" onchange="bukaDariFile(event)" class="hidden">
-                        </label>
-                    </div>
+    <!-- ======================================================= -->
+    <!-- 1. PANEL INPUTAN (KENCA) - RESPONSIF DI HP, DIKONCI 480px DI LAPTOP -->
+    <!-- ======================================================= -->
+    <div class="w-full lg:w-[480px] lg:min-w-[480px] lg:max-w-[480px] lg:h-full bg-slate-800 flex flex-col border-b lg:border-r border-slate-700 no-print">
+        
+        <!-- PANEL TOP BAR -->
+        <div class="bg-slate-900 border-b border-slate-700 shadow-lg p-3 space-y-3 z-30 flex-shrink-0">
+            <!-- HEADER UTAMA & TOMBOL UTAMA -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                    <h1 class="text-sm font-bold text-indigo-400">Bandongan & Nadoman Studio</h1>
+                    <p class="text-[10px] text-slate-400">Klik kolom Bandongan heula, klik lafadz ti luhur.</p>
                 </div>
-
-                <!-- TOMBOL JINIS BARIS NU DIKUNCI -->
-                <div class="flex items-center justify-between bg-slate-950 p-2 rounded border border-slate-800">
-                    <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wider">➕ Tambah Baris Anyar:</span>
-                    <div class="flex gap-1.5">
-                        <button onclick="tambahBaris('arabfull')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] py-1.5 px-2 rounded cursor-pointer transition shadow-sm">
-                            Teks Arab Full
-                        </button>
-                        <button onclick="tambahBaris('bandongan')" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-[11px] py-1.5 px-2 rounded cursor-pointer transition shadow-sm">
-                            Bandongan
-                        </button>
-                        <button onclick="tambahBaris('nadoman')" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-[11px] py-1.5 px-2 rounded cursor-pointer transition shadow-sm">
-                            Nadoman
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- WADAH EUSI NAVIGASI NU TIASA DI-SCROLL BÉBAS -->
-            <div class="flex-1 p-4 overflow-y-auto space-y-3 pb-28">
-                
-                <!-- SECTION 1: MANAJEMEN FASAL -->
-                <div class="bg-slate-900 rounded border border-slate-700 overflow-hidden">
-                    <button onclick="toggleAccordion('acc-fasal', 'panah-fasal')" class="w-full flex justify-between items-center p-2.5 bg-slate-950/80 text-left cursor-pointer hover:bg-slate-950 transition">
-                        <span class="text-xs font-bold text-indigo-300 uppercase tracking-wider">1. Daptar & Navigasi Fasal</span>
-                        <span id="panah-fasal" class="text-xs text-indigo-400 transition-transform duration-200">▼</span>
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <button onclick="simpanKeDatabase()" class="bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold py-1 px-2.5 rounded cursor-pointer transition">
+                        💾 Simpan ka DB
                     </button>
-                    <div id="acc-fasal" class="konten-accordion p-2.5 space-y-2">
-                        <div id="wadah-tab-fasal" class="flex flex-col gap-1 max-h-[120px] overflow-y-auto p-1 bg-slate-950 rounded border border-slate-800"></div>
-                        <div class="flex justify-between items-center">
-                            <button onclick="tambahFasalEnggal()" class="text-[10px] bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1 px-2.5 rounded cursor-pointer">
-                                ➕ Tambah Fasal Anyar
-                            </button>
-                        </div>
-                        <div class="flex gap-2 pt-1 border-t border-slate-800">
-                            <input type="text" id="edit-nama-fasal" oninput="gantiNamaFasalAktip(this.value)" class="flex-1 p-1 bg-slate-950 text-slate-200 rounded border border-slate-700 text-xs focus:outline-none focus:border-indigo-500" placeholder="Ganti nami fasal aktip...">
-                            <button onclick="hapusFasalAktip()" class="text-[11px] bg-red-900/60 hover:bg-red-800 text-red-200 px-2 rounded border border-red-700">Hapus</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SECTION 2: KOTAK ISIAN RANGKUMAN -->
-                <div class="bg-slate-900 rounded border border-slate-700 overflow-hidden">
-                    <button onclick="toggleAccordion('acc-rangkuman', 'panah-rangkuman')" class="w-full flex justify-between items-center p-2.5 bg-slate-950/80 text-left cursor-pointer hover:bg-slate-950 transition">
-                        <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">2. Kotak Isian Rangkuman</span>
-                        <span id="panah-rangkuman" class="text-xs text-purple-400 transition-transform duration-200">▼</span>
+                    <button onclick="bukaDariDatabase()" class="bg-slate-700 hover:bg-slate-600 text-white text-[11px] font-bold py-1 px-2.5 rounded cursor-pointer transition">
+                        📂 Muat ti DB
                     </button>
-                    <div id="acc-rangkuman" class="konten-accordion p-2.5">
-                        <textarea id="input-rangkuman-fasal" oninput="updateRangkumanFasal(this.value)" class="w-full p-1.5 bg-slate-950 text-slate-200 rounded border border-slate-700 text-xs h-20 focus:outline-none focus:border-purple-500" placeholder="Eusi rangkuman di dieu..."></textarea>
-                    </div>
-                </div>
-
-                <!-- SECTION 3: MATRIKS BARIS INPUTAN -->
-                <div class="bg-slate-900 rounded border border-slate-700 overflow-hidden">
-                    <div class="w-full p-2.5 bg-slate-950/80 text-left border-b border-slate-800">
-                        <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">3. Eusi Baris Kitab & Susunan Logat</span>
-                    </div>
                     
-                    <div class="flex flex-col p-2">
-                        <div class="flex bg-slate-950 p-1.5 text-[10px] font-bold text-slate-400 rounded-t border-t border-x border-slate-800">
-                            <div class="w-[6%] text-center">☰</div>
-                            <div class="w-[16%] text-indigo-400">Jinis Baris</div>
-                            <div class="w-[72%] text-center text-slate-300">Kolom Eusi Konten</div>
-                            <div class="w-[6%] text-center">✕</div>
-                        </div>
-                        
-                        <div id="wadah-baris-input" class="bg-slate-950 rounded-b border border-slate-800 p-1.5 space-y-2"></div>
-                    </div>
+                    <!-- Tombol Tambahan kanggo Impor File JSON -->
+                    <input type="file" id="fileJsonInput" accept=".json" style="display: none;" onchange="prosesImporJson(event)">
+                    <button onclick="document.getElementById('fileJsonInput').click()" class="bg-amber-600 hover:bg-amber-700 text-white text-[11px] font-bold py-1 px-2.5 rounded cursor-pointer transition">
+                        📂 Impor JSON
+                    </button>
                 </div>
             </div>
 
-            <!-- TOMBOL CETAK NANGKLED DI HANDAP (FLOATING FIXED) -->
-            <div class="p-4 bg-slate-900 border-t border-slate-700 shadow-2xl grid grid-cols-2 gap-2 mt-auto z-30 flex-shrink-0">
-                <button onclick="cetakBuku('sadaya')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-2 rounded transition shadow-md cursor-pointer text-[11px] uppercase tracking-wider text-center">
-                    🖨️ Cetak Sadaya Fasal
-                </button>
-                <button onclick="cetakBuku('terpilih')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-2 rounded transition shadow-md cursor-pointer text-[11px] uppercase tracking-wider text-center">
-                    ✨ Cetak Terpilih
-                </button>
+            <!-- TOMBOL JINIS BARIS -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 bg-slate-950 p-2 rounded border border-slate-800">
+                <span class="text-[11px] font-bold text-amber-400 uppercase tracking-wider">➕ Tambah Baris:</span>
+                <div class="flex flex-wrap gap-1.5">
+                    <button onclick="tambahBaris('arabfull')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] py-1 px-2 rounded cursor-pointer transition shadow-sm">
+                        Teks Arab Full
+                    </button>
+                    <button onclick="tambahBaris('bandongan')" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-[10px] py-1 px-2 rounded cursor-pointer transition shadow-sm">
+                        Bandongan
+                    </button>
+                    <button onclick="tambahBaris('nadoman')" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-[10px] py-1 px-2 rounded cursor-pointer transition shadow-sm">
+                        Nadoman
+                    </button>
+                </div>
             </div>
         </div>
+
+        <!-- WADAH EUSI NAVIGASI -->
+        <div class="flex-1 p-4 overflow-y-auto space-y-3 pb-28">
+            
+            <!-- SECTION 1: MANAJEMEN FASAL -->
+            <div class="bg-slate-900 rounded border border-slate-700 overflow-hidden">
+                <button onclick="toggleAccordion('acc-fasal', 'panah-fasal')" class="w-full flex justify-between items-center p-2.5 bg-slate-950/80 text-left cursor-pointer hover:bg-slate-950 transition">
+                    <span class="text-xs font-bold text-indigo-300 uppercase tracking-wider">1. Daptar & Navigasi Fasal</span>
+                    <span id="panah-fasal" class="text-xs text-indigo-400 transition-transform duration-200">▼</span>
+                </button>
+                <div id="acc-fasal" class="konten-accordion p-2.5 space-y-2">
+                    <div id="wadah-tab-fasal" class="flex flex-col gap-1 max-h-[120px] overflow-y-auto p-1 bg-slate-950 rounded border border-slate-800"></div>
+                    <div class="flex justify-between items-center">
+                        <button onclick="tambahFasalEnggal()" class="text-[10px] bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1 px-2.5 rounded cursor-pointer">
+                            ➕ Tambah Fasal Anyar
+                        </button>
+                    </div>
+                    <div class="flex gap-2 pt-1 border-t border-slate-800">
+                        <input type="text" id="edit-nama-fasal" oninput="gantiNamaFasalAktip(this.value)" class="flex-1 p-1 bg-slate-950 text-slate-200 rounded border border-slate-700 text-xs focus:outline-none focus:border-indigo-500" placeholder="Ganti nami fasal aktip...">
+                        <button onclick="hapusFasalAktip()" class="text-[11px] bg-red-900/60 hover:bg-red-800 text-red-200 px-2 rounded border border-red-700">Hapus</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: KOTAK ISIAN RANGKUMAN -->
+            <div class="bg-slate-900 rounded border border-slate-700 overflow-hidden">
+                <button onclick="toggleAccordion('acc-rangkuman', 'panah-rangkuman')" class="w-full flex justify-between items-center p-2.5 bg-slate-950/80 text-left cursor-pointer hover:bg-slate-950 transition">
+                    <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">2. Kotak Isian Rangkuman</span>
+                    <span id="panah-rangkuman" class="text-xs text-purple-400 transition-transform duration-200">▼</span>
+                </button>
+                <div id="acc-rangkuman" class="konten-accordion p-2.5">
+                    <textarea id="input-rangkuman-fasal" oninput="updateRangkumanFasal(this.value)" class="w-full p-1.5 bg-slate-950 text-slate-200 rounded border border-slate-700 text-xs h-20 focus:outline-none focus:border-purple-500" placeholder="Eusi rangkuman di dieu..."></textarea>
+                </div>
+            </div>
+
+            <!-- SECTION 3: MATRIKS BARIS INPUTAN -->
+            <div class="bg-slate-900 rounded border border-slate-700 overflow-hidden">
+                <div class="w-full p-2.5 bg-slate-950/80 text-left border-b border-slate-800">
+                    <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">3. Eusi Baris Kitab & Susunan Logat</span>
+                </div>
+                
+                <div class="flex flex-col p-2">
+                    <div class="flex bg-slate-950 p-1.5 text-[10px] font-bold text-slate-400 rounded-t border-t border-x border-slate-800">
+                        <div class="w-[6%] text-center">☰</div>
+                        <div class="w-[16%] text-indigo-400">Jinis Baris</div>
+                        <div class="w-[72%] text-center text-slate-300">Kolom Eusi Konten</div>
+                        <div class="w-[6%] text-center">✕</div>
+                    </div>
+                    
+                    <div id="wadah-baris-input" class="bg-slate-950 rounded-b border border-slate-800 p-1.5 space-y-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOMBOL CETAK NANGKLED DI HANDAP -->
+        <div class="p-4 bg-slate-900 border-t border-slate-700 shadow-2xl grid grid-cols-2 gap-2 mt-auto z-30 flex-shrink-0">
+            <button onclick="cetakBuku('sadaya')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-2 rounded transition shadow-md cursor-pointer text-[11px] uppercase tracking-wider text-center">
+                🖨️ Cetak Sadaya Fasal
+            </button>
+            <button onclick="cetakBuku('terpilih')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-2 rounded transition shadow-md cursor-pointer text-[11px] uppercase tracking-wider text-center">
+                ✨ Cetak Terpilih
+            </button>
+        </div>
+    </div>
 
         <!-- ======================================================= -->
         <!-- 2. PANEL PREVIEW BUKU (KATUHUKUN) - OTOMATIS NGAGUSER SESA LAYAR -->
@@ -322,13 +327,16 @@
                 
                 const cb = document.createElement('input');
                 cb.type = 'checkbox';
-                cb.checked = fasal.dicitak !== false;
-                cb.className = 'mr-2 accent-indigo-500 cursor-pointer';
-                cb.onclick = (e) => {
+                cb.checked = fasal.dicitak === undefined ? true : fasal.dicitak;
+
+                cb.addEventListener("change", function (e) {
                     e.stopPropagation();
-                    fasal.dicitak = cb.checked;
-                    prosesTeksMenjadiBooklet();
-                };
+                    kitabData[idx].dicitak = this.checked;
+
+                    if (modeCetak === "terpilih") {
+                        prosesTeksMenjadiBooklet();
+                    }
+                });
 
                 const btn = document.createElement('button');
                 btn.className = `flex-1 text-left text-[11px] font-bold truncate transition cursor-pointer ${idx === indexFasalAktip ? 'text-indigo-400' : 'text-slate-400 hover:text-slate-200'}`;
@@ -557,28 +565,45 @@
         }
         function handleDragEnd() { renderBarisInput(); }
 
-        function simpanKabehFasal() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(kitabData, null, 2));
-            const dlAnchor = document.createElement('a');
-            dlAnchor.setAttribute("href", dataStr); dlAnchor.setAttribute("download", `Kitab_Studio.json`);
-            dlAnchor.click();
+        // URL Web App ti Google Apps Script anjeun
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwILJ2fnC-mfCd7eSQnUS7V9nq260zN0-kHl6uxbExOC9e4vZ_k6LPIjdqwOVct4ER1BA/exec";
+
+        // 1. Fungsi Simpan kana Google Spreadsheet
+        function simpanKeDatabase() {
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                body: JSON.stringify(kitabData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.pesan);
+            })
+            .catch(error => {
+                console.error('Éror:', error);
+                alert("Gagal nyambung ka Spreadsheet!");
+            });
         }
 
-        function bukaDariFile(event) {
-            const file = event.target.files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                kitabData = JSON.parse(e.target.result);
-                indexFasalAktip = 0; indexBarisAktip = 0; bukaFasalAktip();
-            };
-            reader.readAsText(file);
+        // 2. Fungsi Muat / Buka ti Google Spreadsheet
+        function bukaDariDatabase() {
+            fetch(WEB_APP_URL + "?action=muat")
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    kitabData = data;
+                    indexFasalAktip = 0;
+                    indexBarisAktip = 0;
+                    bukaFasalAktip();
+                    alert("Data suksés dimuat tina Google Spreadsheet!");
+                } else {
+                    alert("Teu aya data disimpen dina Spreadsheet.");
+                }
+            })
+            .catch(error => {
+                console.error('Éror:', error);
+                alert("Gagal ngamuat data ti Spreadsheet!");
+            });
         }
-
-        window.cetakBuku = function(jinis) {
-            modeCetak = jinis;
-            prosesTeksMenjadiBooklet();
-            setTimeout(() => { window.print(); }, 300);
-        };
 
         function prosesTeksMenjadiBooklet() {
     const wadahKertas = document.getElementById('wadah-kertas-cetak');
@@ -801,25 +826,47 @@
         };
 
         function cetakBuku(mode) {
-            console.log("Ngamimitian prosés cetak mode: " + mode);
-            
-            const wadahKertas = document.getElementById('wadah-kertas-cetak');
-            if (!wadahKertas || wadahKertas.children.length === 0) {
-                alert("Teu aya data anu tiasa dicetak! Punten eusian heula kitabna.");
-                return;
-            }
+        // 1. Setel mode dumasar tombol anu diklik ('sadaya' atanapi 'terpilih')
+        modeCetak = mode;
+        
+        // 2. Jalankeun ulang render booklet supados halaman nu teu dipiliha ngaleungit samentawis
+        prosesTeksMenjadiBooklet();
+        
+        // 3. Pasihan jeda sakedap (50ms) supados DOM rengse nyusun, teras buka jandela cetak
+        setTimeout(() => {
+            window.print();
+        }, 50);
+    }
 
-            // Upami mode nu dipilih nyaeta 'terpilih' (fasal nu nuju aktip hungkul)
-            if (mode === 'terpilih') {
-                // Logika tambahan dumasar kana struktur fasal anjeun.
-                // Upami ayeuna sadaya halaman parantos otomatis render di preview,
-                // anjeun tiasa langsung manggil window.print().
-                window.print();
-            } else {
-                // Mode 'sadaya' - langsung nyetak sadaya anu aya di wadah-kertas-cetak
-                window.print();
+    // Fungsi pikeun maca file JSON anu dipilih tina komputer
+    function prosesImporJson(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                // Robah eusi file janten objek JavaScript (Array / JSON)
+                const hasilJson = JSON.parse(e.target.result);
+                
+                // Lebetkeun kana variabel utama aplikasi anjeun (contona: kitabData)
+                kitabData = hasilJson;
+                indexFasalAktip = 0;
+                indexBarisAktip = 0;
+                
+                // Témbongkeun data kana layar/editor
+                if (typeof bukaFasalAktip === 'function') {
+                    bukaFasalAktip();
+                }
+                
+                alert("Alhamdulillah, data JSON suksés dimuat kana aplikasi! Salajengna mangga klik 'Simpan ka DB'.");
+            } catch (error) {
+                console.error(error);
+                alert("Gagal membaca file JSON! Pastikeun format file-na leres.");
             }
-        }
+        };
+        reader.readAsText(file);
+    }
 </script>
 </body>
 </html>
