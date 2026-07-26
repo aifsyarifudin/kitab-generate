@@ -602,18 +602,21 @@
         // 2. Fungsi Muat / Buka ti Google Spreadsheet
         function bukaDariDatabase() {
             let kitabDipilih = typeof kitabAktip !== 'undefined' ? kitabAktip : 'safinah';
-
+        
             fetch(WEB_APP_URL + "?action=muat&kitab=" + kitabDipilih)
             .then(response => response.json())
             .then(data => {
                 if (data && data.length > 0) {
                     daftarFasal = data;
+                    if (typeof databaseKitab !== 'undefined') {
+                        databaseKitab[kitabDipilih] = daftarFasal;
+                    }
                     if (typeof indexFasalAktip !== 'undefined') indexFasalAktip = 0;
                     if (typeof indexBarisAktip !== 'undefined') indexBarisAktip = 0;
                     if (typeof bukaFasalAktip === 'function') bukaFasalAktip();
-                    alert("Data suksés dimuat tina Google Spreadsheet!");
+                    alert("Alhamdulillah, data suksés dimuat tina Database!");
                 } else {
-                    alert("Teu aya data disimpen dina Spreadsheet pikeun kitab ieu.");
+                    alert("Teu acan aya data anu disimpen dina Spreadsheet untuk kitab ieu.");
                 }
             })
             .catch(error => {
