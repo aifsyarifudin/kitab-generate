@@ -99,7 +99,7 @@
     }
 
     /* ==========================================================
-       4. SETELAN CETAK (PRINT) - METODE ISOLASI WADAH KERTAS 
+       4. SETELAN CETAK (PRINT) - 100% BERSIH & AMAN
        ========================================================== */
     @media print {
         @page { 
@@ -107,7 +107,7 @@
             margin: 0 !important; 
         }
 
-        /* Setel sakabéh awak dokumen jadi bodas bersih */
+        /* Paksa body & html janten bodas polos */
         html, body {
             width: 100% !important;
             height: auto !important;
@@ -116,16 +116,25 @@
             color: #000000 !important;
             margin: 0 !important;
             padding: 0 !important;
+            overflow: visible !important;
             -webkit-print-color-adjust: exact;
         }
 
-        /* SUMPUTKEUN MUTLAK: Sadaya unsur dina body disumputkeun heula iwal #wadah-kertas-cetak */
-        body > *:not(#wadah-kertas-cetak) {
+        /* SUMPUTKEUN MUTLAK: Panel kénca jeung sadaya elemen selain wadah cetak */
+        .no-print,
+        div.no-print,
+        .bg-slate-800,
+        .bg-slate-900,
+        body > div > div:first-child {
             display: none !important;
-            visibility: hidden !important;
+            width: 0 !important;
+            height: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            left: -9999px !important;
         }
 
-        /* Pasihan rohangan pinuh ngan kanggo wadah kertas cetak */
+        /* Wadah kertas cetak robah janten kontainer utama tunggal */
         #wadah-kertas-cetak {
             display: block !important;
             width: 100% !important;
@@ -133,12 +142,11 @@
             margin: 0 !important;
             padding: 0 !important;
             background: #ffffff !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
+            position: relative !important;
+            overflow: visible !important;
         }
 
-        /* Unggal lembar F4 dipidangkeun rapih sacara mandiri sacara multi-halaman */
+        /* Kertas F4 dicetak pas ukuran landscape, pindah halaman sampurna */
         .lembar-f4-cetak {
             display: flex !important; 
             flex-direction: row !important;
@@ -159,7 +167,7 @@
             overflow: hidden !important;
         }
 
-        /* Lembar tungtung moal maksa nyieun kaca kosong anyar */
+        /* Lembar tungtung moal nyieun kaca kosong anyar */
         .lembar-f4-cetak:last-child {
             page-break-after: auto !important;
             break-after: auto !important;
@@ -180,7 +188,7 @@
             border: none !important; 
         }
     }
-</style>
+    </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
 
@@ -323,7 +331,6 @@
     let barisNuKeurDiDrag = null;
     let modeCetak = "sadaya";
 
-    // Variabel Database Kitab & Kitab Aktip
     let databaseKitab = {
         safinah: JSON.parse(JSON.stringify(kitabData)),
         tijan: [],
@@ -331,7 +338,6 @@
     };
     let kitabAktip = 'safinah';
 
-    // URL Web App Google Apps Script
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwILJ2fnC-mfCd7eSQnUS7V9nq260zN0-kHl6uxbExOC9e4vZ_k6LPIjdqwOVct4ER1BA/exec";
 
     function toggleAccordion(idKonten, idPanah) {
@@ -574,25 +580,16 @@
     }
     function handleDragEnd() { renderBarisInput(); }
 
-    // ==========================================
-    // FUNGSI DATABASE & PILIHAN KITAB (DILERESKEUN)
-    // ==========================================
     function simpanKeDatabase() {
         databaseKitab[kitabAktip] = kitabData;
-
-        let payload = {
-            kitabAktip: kitabAktip,
-            dataFasal: kitabData
-        };
+        let payload = { kitabAktip: kitabAktip, dataFasal: kitabData };
 
         fetch(WEB_APP_URL, {
             method: 'POST',
             body: JSON.stringify(payload)
         })
         .then(response => response.json())
-        .then(data => {
-            alert(data.pesan);
-        })
+        .then(data => { alert(data.pesan); })
         .catch(error => {
             console.error('Éror:', error);
             alert("Gagal nyambung ka Spreadsheet!");
@@ -642,7 +639,6 @@
         indexBarisAktip = 0;
         bukaFasalAktip();
     }
-    // ==========================================
 
     function prosesTeksMenjadiBooklet() {
         const wadahKertas = document.getElementById('wadah-kertas-cetak');
