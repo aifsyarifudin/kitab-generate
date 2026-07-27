@@ -99,7 +99,7 @@
     }
 
     /* ==========================================================
-       4. SETELAN CETAK (PRINT) - BERSIH, MULTI LEMBAR, TANPA PANEL 
+       4. SETELAN CETAK (PRINT) - METODE ISOLASI WADAH KERTAS 
        ========================================================== */
     @media print {
         @page { 
@@ -107,7 +107,7 @@
             margin: 0 !important; 
         }
 
-        /* Setel sakabéh kaca browser janten bodas, leungitkeun unsur poék */
+        /* Setel sakabéh awak dokumen jadi bodas bersih */
         html, body {
             width: 100% !important;
             height: auto !important;
@@ -119,19 +119,13 @@
             -webkit-print-color-adjust: exact;
         }
 
-        /* Sumputkeun total panel kénca/inputan sareng tombol */
-        .no-print, 
-        div.no-print,
-        div[class*="w-\[480px\]"],
-        .bg-slate-800,
-        .bg-slate-900 {
+        /* SUMPUTKEUN MUTLAK: Sadaya unsur dina body disumputkeun heula iwal #wadah-kertas-cetak */
+        body > *:not(#wadah-kertas-cetak) {
             display: none !important;
-            width: 0 !important;
-            height: 0 !important;
-            overflow: hidden !important;
+            visibility: hidden !important;
         }
 
-        /* Wadah kertas jadi kontainer biasa */
+        /* Pasihan rohangan pinuh ngan kanggo wadah kertas cetak */
         #wadah-kertas-cetak {
             display: block !important;
             width: 100% !important;
@@ -139,9 +133,12 @@
             margin: 0 !important;
             padding: 0 !important;
             background: #ffffff !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
         }
 
-        /* Unggal lembar F4 dicitak pas ukuran landscape F4, pindah halaman otomatis */
+        /* Unggal lembar F4 dipidangkeun rapih sacara mandiri sacara multi-halaman */
         .lembar-f4-cetak {
             display: flex !important; 
             flex-direction: row !important;
