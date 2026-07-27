@@ -89,7 +89,7 @@
     }
 
     /* ==========================================================
-       3. SETELAN CETAK (PRINT) - ANTI BLANK
+       3. SETELAN CETAK (PRINT) - LANSKAP F4
        ========================================================== */
     @media print {
         @page { 
@@ -97,28 +97,19 @@
             margin: 0; 
         }
 
-        /* Sembunyikan total panel input aplikasi */
         .no-print {
             display: none !important;
         }
 
-        /* Setel ulang body & html khusus cetak */
         html, body {
             width: 330mm !important;
-            height: 215mm !important;
+            height: auto !important;
             background: #ffffff !important;
             color: #000000 !important;
             margin: 0 !important;
             padding: 0 !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
-        }
-
-        /* Paksa container utama tampil penuh tanpa scroll */
-        body > div {
-            display: block !important;
-            height: auto !important;
-            overflow: visible !important;
         }
 
         #panel-preview-utama {
@@ -134,13 +125,13 @@
         }
 
         #wadah-kertas-cetak {
-            display: block !important;
+            display: flex !important;
+            flex-direction: column !important;
             width: 330mm !important;
             margin: 0 !important;
             padding: 0 !important;
         }
 
-        /* Lembar F4 nampil pas persis di kertas cetak */
         .lembar-f4-cetak {
             display: flex !important; 
             flex-direction: row !important;
@@ -748,7 +739,7 @@
                 targetDiv.appendChild(nodeKlon);
             }
 
-            if (targetDiv.offsetHeight > TINGGI_MAKSIMAL) {
+            if (targetDiv.scrollHeight > TINGGI_MAKSIMAL || targetDiv.offsetHeight > TINGGI_MAKSIMAL) {
                 if (nodeKlon.classList.contains('kotak-bandongan-satuan') && gridOtomatisSekarang) {
                     gridOtomatisSekarang.removeChild(nodeKlon);
                     if (gridOtomatisSekarang.children.length === 0) gridOtomatisSekarang.remove();
@@ -832,7 +823,7 @@
     function cetakBuku(mode) {
         modeCetak = mode;
         prosesTeksMenjadiBooklet();
-        setTimeout(() => { window.print(); }, 100);
+        setTimeout(() => { window.print(); }, 150);
     }
 
     function prosesImporJson(event) {
