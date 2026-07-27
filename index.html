@@ -167,6 +167,14 @@
         .garis-lipat { 
             border-left: 1px dashed #94a3b8 !important; 
         }
+
+        /* MÉSKIN DI PRINT, GARIS DI KOTAK BANDUNGAN & NADHOMAN DIHILANGKEUN */
+        .kotak-bandongan-satuan {
+            border: none !important;
+        }
+        .wadah-nadhoman-cetak {
+            border: none !important;
+        }
     }
     </style>
 </head>
@@ -658,9 +666,10 @@
                     }
                 } else if (item.tipe === 'nadoman') {
                     const nadoDiv = document.createElement('div');
-                    nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-2 border-t border-b border-gray-400 py-1 space-y-0.5 elemen-cetak-tunggal";
+                    // Garis dina nadhoman dileungitkeun (ngagunakeun wadah-nadhoman-cetak polos)
+                    nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-2 py-1 space-y-0.5 elemen-cetak-tunggal wadah-nadhoman-cetak";
                     nadoDiv.innerHTML = `
-                        <table class="w-full text-[11px] border-b border-dotted border-gray-300 px-1" style="table-layout: fixed; width: 100%;">
+                        <table class="w-full text-[11px] px-1" style="table-layout: fixed; width: 100%;">
                             <tr>
                                 <td class="text-left font-medium text-slate-900 align-top" style="width: 47%; word-wrap: break-word;">${item.bait1 || '&nbsp;'}</td>
                                 <td class="text-center font-bold text-gray-400 align-top" style="width: 6%;">#</td>
@@ -670,7 +679,8 @@
                     wadahBlokKonten.appendChild(nadoDiv);
                 } else if (item.tipe === 'bandongan') {
                     const boxBandongan = document.createElement('div');
-                    boxBandongan.className = "border-r border-b border-gray-300 p-1 text-center bg-white min-h-[95px] elemen-cetak-tunggal kotak-bandongan-satuan box-border";
+                    // Garis border-r sareng border-b dileungitkeun, diganti ku polos (tanpa garis)
+                    boxBandongan.className = "p-1 text-center bg-white min-h-[95px] elemen-cetak-tunggal kotak-bandongan-satuan box-border";
                     
                     boxBandongan.style.setProperty('width', '20%', 'important');
                     boxBandongan.style.setProperty('flex', '0 0 20%', 'important');
@@ -680,9 +690,9 @@
                     boxBandongan.style.setProperty('align-items', 'center', 'important');
 
                     boxBandongan.innerHTML = `
-                        <span class="text-[8px] text-gray-400 italic font-sans block w-full" style="direction: ltr;">${item.luhur || '&nbsp;'}</span>
+                        <span class="text-[8px] text-gray-500 italic font-sans block w-full" style="direction: ltr;">${item.luhur || '&nbsp;'}</span>
                         <span class="font-arab text-base font-bold text-slate-900 leading-normal my-auto block w-full">${item.arab || '&nbsp;'}</span>
-                        <span class="text-[8px] text-slate-600 font-sans block w-full" style="direction: ltr;">${item.sunda || '&nbsp;'}</span>
+                        <span class="text-[8px] text-slate-700 font-sans block w-full" style="direction: ltr;">${item.sunda || '&nbsp;'}</span>
                     `;
                     wadahBlokKonten.appendChild(boxBandongan);
                 }
@@ -720,7 +730,8 @@
 
         function jieunGridAnyar() {
             const gridDiv = document.createElement('div');
-            gridDiv.className = "border-t border-l border-gray-300 my-2 wadah-grid-induk w-full";
+            // Garis pembatas luar grid wadah bandongan oge diical
+            gridDiv.className = "my-2 wadah-grid-induk w-full";
             gridDiv.style.direction = "rtl";
             gridDiv.style.setProperty('display', 'flex', 'important');
             gridDiv.style.setProperty('flex-wrap', 'wrap', 'important');
