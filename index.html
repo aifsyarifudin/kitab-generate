@@ -100,62 +100,73 @@
         }
     
         /* 4. SETELAN CETAK (PRINT) */
-        @media print {
-            @page { size: 330mm 215mm; margin: 0 !important; }
-    
-            /* Sumputkeun panel kénca, tombol, jeung elemen pangrojong lianna sacara mutlak */
-            .no-print, 
-            #file-input, 
-            #judul-preview, 
-            div[style*="width: 480px"], 
-            .w-full.lg\:w-\[480px\],
-            .bg-slate-800.flex-shrink-0 { 
-                display: none !important; 
-            }
-    
-            html, body, .flex, .h-screen, .overflow-hidden {
-                display: block !important;
-                height: auto !important;
-                overflow: visible !important;
-                background: #ffffff !important;
-                color: #000000 !important;
-                margin: 0 !important;
-            }
-    
-            #wadah-kertas-cetak {
-                display: block !important;
-                width: 330mm !important;
-                height: auto !important;
-                margin: 0 !important;
-            }
-    
-            .lembar-f4-cetak {
-                display: flex !important; 
-                flex-direction: row !important;
-                width: 330mm !important; 
-                height: 215mm !important;
-                page-break-after: always !important; 
-                break-after: page !important;
-                break-inside: avoid !important;
-                box-shadow: none !important; 
-                border: none !important;
-                margin: 0 !important; 
-                position: relative !important;
-            }
-    
-            .sub-halaman { 
-                width: 165mm !important; 
-                height: 215mm !important; 
-            }
-    
-            .garis-lipat { 
-                border-left: 1px dashed #94a3b8 !important; 
-            }
-    
-            .lembar-f4-cetak * { 
-                border: none !important; 
-            }
+    @media print {
+        @page { size: 330mm 215mm; margin: 0 !important; }
+
+        /* Paksa sadaya elemen janten block/hidden biasa, hancurkeun flexbox utama */
+        html, body {
+            width: 100% !important;
+            height: auto !important;
+            overflow: visible !important;
+            background: #ffffff !important;
+            color: #000000 !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
+
+        /* SUMPUTKEUN PANEL KÉNCA SACARA MUTLAK (Pastikeun kelas & tag-na kacumputkeun) */
+        .no-print, 
+        div.no-print,
+        div[class*="w-\[480px\]"],
+        .bg-slate-800 {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            top: -9999px !important;
+            left: -9999px !important;
+        }
+
+        /* Wadah kertas cetak janten hiji-hijina anu némbongan */
+        #wadah-kertas-cetak {
+            display: block !important;
+            width: 330mm !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #ffffff !important;
+            position: static !important;
+        }
+
+        .lembar-f4-cetak {
+            display: flex !important; 
+            flex-direction: row !important;
+            width: 330mm !important; 
+            height: 215mm !important;
+            page-break-after: always !important; 
+            break-after: page !important;
+            break-inside: avoid !important;
+            box-shadow: none !important; 
+            border: none !important;
+            margin: 0 !important; 
+            position: relative !important;
+        }
+
+        .sub-halaman { 
+            width: 165mm !important; 
+            height: 215mm !important; 
+        }
+
+        .garis-lipat { 
+            border-left: 1px dashed #94a3b8 !important; 
+        }
+
+        .lembar-f4-cetak * { 
+            border: none !important; 
+        }
+    }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
