@@ -666,21 +666,21 @@
                     }
                 } else if (item.tipe === 'nadoman') {
                     const nadoDiv = document.createElement('div');
-                    // Garis dina nadhoman dileungitkeun (ngagunakeun wadah-nadhoman-cetak polos)
-                    nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-2 py-1 space-y-0.5 elemen-cetak-tunggal wadah-nadhoman-cetak";
+                    // Garis dina nadhoman dipastikeun polos (border-0)
+                    nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-2 py-1 space-y-0.5 elemen-cetak-tunggal";
                     nadoDiv.innerHTML = `
-                        <table class="w-full text-[11px] px-1" style="table-layout: fixed; width: 100%;">
+                        <table class="w-full text-[11px] px-1 border-0" style="table-layout: fixed; width: 100%;">
                             <tr>
-                                <td class="text-left font-medium text-slate-900 align-top" style="width: 47%; word-wrap: break-word;">${item.bait1 || '&nbsp;'}</td>
-                                <td class="text-center font-bold text-gray-400 align-top" style="width: 6%;">#</td>
-                                <td class="text-left font-medium text-slate-900 align-top" style="width: 47%; word-wrap: break-word;">${item.bait2 || '&nbsp;'}</td>
+                                <td class="text-left font-medium text-slate-900 align-top border-0" style="width: 47%; word-wrap: break-word;">${item.bait1 || '&nbsp;'}</td>
+                                <td class="text-center font-bold text-gray-400 align-top border-0" style="width: 6%;">#</td>
+                                <td class="text-left font-medium text-slate-900 align-top border-0" style="width: 47%; word-wrap: break-word;">${item.bait2 || '&nbsp;'}</td>
                             </tr>
                         </table>`;
                     wadahBlokKonten.appendChild(nadoDiv);
                 } else if (item.tipe === 'bandongan') {
                     const boxBandongan = document.createElement('div');
-                    // Garis border-r sareng border-b dileungitkeun, diganti ku polos (tanpa garis)
-                    boxBandongan.className = "p-1 text-center bg-white min-h-[95px] elemen-cetak-tunggal kotak-bandongan-satuan box-border";
+                    // Garis border dina kotak bandongan dipastikeun teu aya (border: none)
+                    boxBandongan.className = "p-1 text-center bg-white min-h-[95px] elemen-cetak-tunggal box-border border-0";
                     
                     boxBandongan.style.setProperty('width', '20%', 'important');
                     boxBandongan.style.setProperty('flex', '0 0 20%', 'important');
@@ -688,6 +688,7 @@
                     boxBandongan.style.setProperty('flex-direction', 'column', 'important');
                     boxBandongan.style.setProperty('justify-content', 'space-between', 'important');
                     boxBandongan.style.setProperty('align-items', 'center', 'important');
+                    boxBandongan.style.setProperty('border', 'none', 'important');
 
                     boxBandongan.innerHTML = `
                         <span class="text-[8px] text-gray-500 italic font-sans block w-full" style="direction: ltr;">${item.luhur || '&nbsp;'}</span>
@@ -730,19 +731,19 @@
 
         function jieunGridAnyar() {
             const gridDiv = document.createElement('div');
-            // Garis pembatas luar grid wadah bandongan oge diical
             gridDiv.className = "my-2 wadah-grid-induk w-full";
             gridDiv.style.direction = "rtl";
             gridDiv.style.setProperty('display', 'flex', 'important');
             gridDiv.style.setProperty('flex-wrap', 'wrap', 'important');
             gridDiv.style.setProperty('justify-content', 'center', 'important');
+            gridDiv.style.setProperty('border', 'none', 'important');
             targetDiv.appendChild(gridDiv);
             gridOtomatisSekarang = gridDiv;
         }
 
         kumpulanElemen.forEach((el) => {
             let nodeKlon = el.cloneNode(true);
-            if (nodeKlon.classList.contains('kotak-bandongan-satuan')) {
+            if (nodeKlon.classList.contains('kotak-bandongan-satuan') || (nodeKlon.classList.contains('elemen-cetak-tunggal') && nodeKlon.style.flex)) {
                 if (!gridOtomatisSekarang) { jieunGridAnyar(); }
                 gridOtomatisSekarang.appendChild(nodeKlon);
             } else {
@@ -751,7 +752,7 @@
             }
 
             if (targetDiv.scrollHeight > TINGGI_MAKSIMAL || targetDiv.offsetHeight > TINGGI_MAKSIMAL) {
-                if (nodeKlon.classList.contains('kotak-bandongan-satuan') && gridOtomatisSekarang) {
+                if ((nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) && gridOtomatisSekarang) {
                     gridOtomatisSekarang.removeChild(nodeKlon);
                     if (gridOtomatisSekarang.children.length === 0) gridOtomatisSekarang.remove();
                 } else {
@@ -767,7 +768,7 @@
                 targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
                 
                 nodeKlon = el.cloneNode(true);
-                if (nodeKlon.classList.contains('kotak-bandongan-satuan')) {
+                if (nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) {
                     jieunGridAnyar();
                     gridOtomatisSekarang.appendChild(nodeKlon);
                 } else {
