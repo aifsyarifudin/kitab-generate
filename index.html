@@ -12,109 +12,110 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     
     <style>
-        /* 1. RESET DASAR */
-        *, *::before, *::after { box-sizing: border-box; }
-        body { margin: 0; padding: 0; font-family: sans-serif; }
-        .font-arab { font-family: 'Amiri', serif; }
-    
-        /* 2. LAYOUT KERTAS (PREVIEW APLIKASI) */
-        .lembar-f4-cetak {
-            width: 330mm; 
-            height: 215mm;
-            min-width: 330mm;
-            min-height: 215mm;
-            max-height: 215mm;
-            background-color: #ffffff; 
-            color: #1e293b;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-            border: none !important;
-            display: flex; 
-            position: relative; 
-            overflow: hidden; 
-            margin: 20px auto;
-        }
-    
-        .sub-halaman {
-            width: 165mm; 
-            height: 215mm; 
-            padding: 12mm 12mm;
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-            overflow: hidden;
-        }
-    
-        .garis-lipat {
-            position: absolute; 
-            left: 50%; top: 0; bottom: 0; 
-            width: 1px;
-            border-left: 1px dashed #cbd5e1; 
-            transform: translateX(-50%); 
-            z-index: 10;
-        }
-    
-        /* 3. KOMPONEN LAINNA */
-        .baris-dragged { opacity: 0.4; background-color: #312e81 !important; }
-    
-        .wadah-rangkuman-cetak {
-            position: relative;
-            background-image: linear-gradient(#e5e7eb 1px, transparent 1px);
-            background-size: 100% 24px;
-            line-height: 24px;
-            padding-top: 4px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-    
-        .konten-accordion {
-            max-height: 2000px;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-        }
-        .konten-accordion.tutup {
-            max-height: 0 !important;
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
-            border: none !important;
-        }
-    
-        .lafadz-klik {
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-block;
-            padding: 0 4px;
-            border-radius: 4px;
-        }
-        .lafadz-klik:hover {
-            background-color: #065f46;
-            color: #ffffff;
-            transform: scale(1.1);
-        }
-    
-        /* Pikeun ngaleungitkeun border dina aplikasi biasa */
-        .lembar-f4-cetak table, 
-        .lembar-f4-cetak td, 
-        .lembar-f4-cetak div, 
-        .kotak-bandongan-satuan {
-            border: none !important;
-            outline: none !important;
-        }
-    
-        /* 4. SETELAN CETAK (PRINT) */
-    @media print {
-        @page { size: 330mm 215mm; margin: 0 !important; }
+    /* 1. RESET DASAR */
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; padding: 0; font-family: sans-serif; }
+    .font-arab { font-family: 'Amiri', serif; }
 
-        /* Paksa sadaya elemen janten block/hidden biasa, hancurkeun flexbox utama */
+    /* 2. LAYOUT KERTAS (PREVIEW APLIKASI) */
+    .lembar-f4-cetak {
+        width: 330mm; 
+        height: 215mm;
+        min-width: 330mm;
+        min-height: 215mm;
+        max-height: 215mm;
+        background-color: #ffffff; 
+        color: #1e293b;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        border: none !important;
+        display: flex; 
+        position: relative; 
+        overflow: hidden; 
+        margin: 20px auto;
+    }
+
+    .sub-halaman {
+        width: 165mm; 
+        height: 215mm; 
+        padding: 12mm 12mm;
+        display: flex; 
+        flex-direction: column; 
+        justify-content: space-between; 
+        overflow: hidden;
+    }
+
+    .garis-lipat {
+        position: absolute; 
+        left: 50%; top: 0; bottom: 0; 
+        width: 1px;
+        border-left: 1px dashed #cbd5e1; 
+        transform: translateX(-50%); 
+        z-index: 10;
+    }
+
+    /* 3. KOMPONEN LAINNA */
+    .baris-dragged { opacity: 0.4; background-color: #312e81 !important; }
+
+    .wadah-rangkuman-cetak {
+        position: relative;
+        background-image: linear-gradient(#e5e7eb 1px, transparent 1px);
+        background-size: 100% 24px;
+        line-height: 24px;
+        padding-top: 4px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .konten-accordion {
+        max-height: 2000px;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+    }
+    .konten-accordion.tutup {
+        max-height: 0 !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        border: none !important;
+    }
+
+    .lafadz-klik {
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-block;
+        padding: 0 4px;
+        border-radius: 4px;
+    }
+    .lafadz-klik:hover {
+        background-color: #065f46;
+        color: #ffffff;
+        transform: scale(1.1);
+    }
+
+    .lembar-f4-cetak table, 
+    .lembar-f4-cetak td, 
+    .lembar-f4-cetak div, 
+    .kotak-bandongan-satuan {
+        border: none !important;
+        outline: none !important;
+    }
+
+    /* 4. SETELAN CETAK (PRINT) - ANTI HALAMAN KOSONG */
+    @media print {
+        @page { 
+            size: 330mm 215mm; 
+            margin: 0 !important; 
+        }
+
         html, body {
-            width: 100% !important;
-            height: auto !important;
-            overflow: visible !important;
+            width: 330mm !important;
+            height: 215mm !important;
+            overflow: hidden !important;
             background: #ffffff !important;
             color: #000000 !important;
             margin: 0 !important;
             padding: 0 !important;
         }
 
-        /* SUMPUTKEUN PANEL KÉNCA SACARA MUTLAK (Pastikeun kelas & tag-na kacumputkeun) */
+        /* Sumputkeun panel kénca sacara total tur cabut tina aliran DOM */
         .no-print, 
         div.no-print,
         div[class*="w-\[480px\]"],
@@ -123,21 +124,22 @@
             visibility: hidden !important;
             height: 0 !important;
             width: 0 !important;
-            overflow: hidden !important;
             position: absolute !important;
-            top: -9999px !important;
-            left: -9999px !important;
+            top: 0 !important;
+            left: 0 !important;
         }
 
-        /* Wadah kertas cetak janten hiji-hijina anu némbongan */
         #wadah-kertas-cetak {
             display: block !important;
             width: 330mm !important;
-            height: auto !important;
+            height: 215mm !important;
             margin: 0 !important;
             padding: 0 !important;
             background: #ffffff !important;
-            position: static !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            overflow: hidden !important;
         }
 
         .lembar-f4-cetak {
@@ -145,18 +147,30 @@
             flex-direction: row !important;
             width: 330mm !important; 
             height: 215mm !important;
-            page-break-after: always !important; 
-            break-after: page !important;
-            break-inside: avoid !important;
+            min-height: 215mm !important;
+            max-height: 215mm !important;
+            /* Anggo 'avoid' atanapi 'auto' dina halaman pamungkas supados teu nyieun kaca kosong anyar */
+            page-break-after: auto !important; 
+            break-after: auto !important;
             box-shadow: none !important; 
             border: none !important;
             margin: 0 !important; 
-            position: relative !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            overflow: hidden !important;
+        }
+
+        /* Upami langkung ti hiji kaca / lembar, pasihan page-break khusus dina lembar saterusna iwal nu terakhir */
+        .lembar-f4-cetak:not(:last-child) {
+            page-break-after: always !important;
+            break-after: page !important;
         }
 
         .sub-halaman { 
             width: 165mm !important; 
             height: 215mm !important; 
+            overflow: hidden !important;
         }
 
         .garis-lipat { 
@@ -167,7 +181,7 @@
             border: none !important; 
         }
     }
-    </style>
+</style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
 
