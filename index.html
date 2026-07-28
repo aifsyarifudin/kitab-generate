@@ -641,6 +641,7 @@
         }
 
         const wadahBlokKonten = document.createElement('div');
+        // Dilereskeun kana rubak sub-halaman (165mm dikurangi padding sakitar 24mm jadi 141mm, tapi diset pas sareng kontainerna)
         wadahBlokKonten.style.width = '141mm';
         wadahBlokKonten.className = "font-sans text-slate-900 text-left absolute opacity-0 pointer-events-none";
         document.body.appendChild(wadahBlokKonten);
@@ -722,7 +723,8 @@
         halamanDOMVirtual.style.visibility = 'hidden';
         halamanDOMVirtual.style.width = '141mm';
 
-        const TINGGI_MAKSIMAL = 580; 
+        // Ditambihan wates jangkungna dina piksel nu pas pikeun ukuran sub-halaman F4 (12mm padding luhur-handap tina 215mm)
+        const TINGGI_MAKSIMAL = 650; 
         const kumpulanElemen = Array.from(wadahBlokKonten.children);
         let gridOtomatisSekarang = null;
 
@@ -748,7 +750,8 @@
                 targetDiv.appendChild(nodeKlon);
             }
 
-            if (targetDiv.scrollHeight > TINGGI_MAKSIMAL || targetDiv.offsetHeight > TINGGI_MAKSIMAL) {
+            // Pamariksaan jangkungna ngagunakeun clientHeight nu stabil
+            if (targetDiv.clientHeight > TINGGI_MAKSIMAL || targetDiv.scrollHeight > TINGGI_MAKSIMAL) {
                 if ((nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) && gridOtomatisSekarang) {
                     gridOtomatisSekarang.removeChild(nodeKlon);
                     if (gridOtomatisSekarang.children.length === 0) gridOtomatisSekarang.remove();
@@ -786,7 +789,7 @@
         halamanDOMVirtual.remove();
         document.body.removeChild(wadahBlokKonten);
 
-        // Tambahkeun halaman kosong nepi ka pas kelipatan 4 DI TUNGTUNG (bukan di awal)
+        // Tambahkeun halaman kosong nepi ka pas kelipatan 4 DI TUNGTUNG
         while (wadahKoleksiHalamanMentah.length % 4 !== 0) {
             nomorHalamanVirtual++;
             let blankPage = buatHalamanDOMVirtual(nomorHalamanVirtual);
@@ -796,7 +799,7 @@
 
         let totalHalaman = wadahKoleksiHalamanMentah.length;
         
-        // Loop susunan booklet lipat tengah anu bener (halaman 1 mimitian ti index 0)
+        // Loop susunan booklet lipat tengah
         for (let i = 0; i < totalHalaman / 4; i++) {
             let kiriDepan = totalHalaman - 1 - (i * 2);
             let kananDepan = 0 + (i * 2);
@@ -837,11 +840,6 @@
         `;
         return tempDiv;
     }
-
-    window.onload = function() { 
-        bukaFasalAktip(); 
-        toggleAccordion('acc-rangkuman', 'panah-rangkuman');
-    };
 
     function cetakBuku(mode) {
         modeCetak = mode;
