@@ -625,8 +625,8 @@
     function buatHalamanDOMVirtual(no) {
         const tempDiv = document.createElement('div');
         tempDiv.style.width = '141mm';
-        tempDiv.style.height = '175mm'; 
-        tempDiv.style.maxHeight = '175mm';
+        tempDiv.style.height = '195mm'; // Saluyukeun jangkungna max halaman virtual langkung ageung saeutik
+        tempDiv.style.maxHeight = '195mm';
         tempDiv.style.display = 'flex';
         tempDiv.style.flexDirection = 'column';
         tempDiv.style.justifyContent = 'space-between';
@@ -634,8 +634,8 @@
         tempDiv.className = "bg-white text-slate-900";
         
         tempDiv.innerHTML = `
-            <div class="isi-konten-halaman w-full flex-1 overflow-hidden" style="max-height: 170mm;"></div>
-            <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-1 mt-1 flex justify-between px-1" style="flex-shrink: 0;">
+            <div class="isi-konten-halaman w-full flex-1 overflow-hidden" style="max-height: 190mm;"></div>
+            <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-0.5 mt-0.5 flex justify-between px-1" style="flex-shrink: 0;">
                 <span>Kitab Studio</span>
                 <span class="font-bold text-slate-800 text-[10px] bg-slate-100 px-2 rounded-full">- ${no} -</span>
                 <span>Matan, Lughot, Ringkesan & Nadoman</span>
@@ -668,7 +668,7 @@
 
         dataFasalDiProses.forEach((fasal) => {
             const judulDiv = document.createElement('div');
-            judulDiv.className = "w-full text-center my-1.5 border-b-2 border-slate-900 pb-0.5 elemen-cetak-tunggal";
+            judulDiv.className = "w-full text-center my-1 border-b-2 border-slate-900 pb-0.5 elemen-cetak-tunggal";
             judulDiv.innerHTML = `<h2 class="text-xs font-extrabold tracking-wider text-slate-900 font-sans uppercase">${fasal.nama}</h2>`;
             wadahBlokKonten.appendChild(judulDiv);
 
@@ -676,13 +676,13 @@
                 if (item.tipe === 'arabfull') {
                     if (item.teks && item.teks.trim()) {
                         const arabDiv = document.createElement('div');
-                        arabDiv.className = "w-full text-center px-1 my-2 elemen-cetak-tunggal";
+                        arabDiv.className = "w-full text-center px-1 my-1.5 elemen-cetak-tunggal";
                         arabDiv.innerHTML = `<p class="font-arab text-lg font-medium leading-loose text-slate-950 tracking-wide text-center">${item.teks}</p>`;
                         wadahBlokKonten.appendChild(arabDiv);
                     }
                 } else if (item.tipe === 'nadoman') {
                     const nadoDiv = document.createElement('div');
-                    nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-1.5 py-0.5 space-y-0.5 elemen-cetak-tunggal wadah-nadhoman-cetak";
+                    nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-1 py-0.5 space-y-0.5 elemen-cetak-tunggal wadah-nadhoman-cetak";
                     nadoDiv.innerHTML = `
                         <table class="w-full text-[11px] px-1 border-0" style="table-layout: fixed; width: 100%;">
                             <tr>
@@ -694,7 +694,7 @@
                     wadahBlokKonten.appendChild(nadoDiv);
                 } else if (item.tipe === 'bandongan') {
                     const boxBandongan = document.createElement('div');
-                    boxBandongan.className = "p-1 text-center bg-white min-h-[85px] elemen-cetak-tunggal box-border border-0 kotak-bandongan-satuan";
+                    boxBandongan.className = "p-0.5 text-center bg-white min-h-[75px] elemen-cetak-tunggal box-border border-0 kotak-bandongan-satuan";
                     
                     boxBandongan.style.setProperty('width', '20%', 'important');
                     boxBandongan.style.setProperty('flex', '0 0 20%', 'important');
@@ -722,7 +722,7 @@
                 });
 
                 const rangkumanDiv = document.createElement('div');
-                rangkumanDiv.className = "w-full mt-3 mb-2 font-sans elemen-cetak-tunggal";
+                rangkumanDiv.className = "w-full mt-2 mb-1 font-sans elemen-cetak-tunggal";
                 rangkumanDiv.innerHTML = `
                     <div class="text-[11px] font-bold text-slate-950 uppercase underline tracking-wider mb-1">RANGKUMAN</div>
                     <div class="wadah-rangkuman-cetak border-t border-gray-300">
@@ -747,11 +747,11 @@
 
         function jieunGridAnyar() {
             const gridDiv = document.createElement('div');
-            gridDiv.className = "my-1 wadah-grid-induk w-full";
+            gridDiv.className = "my-0.5 wadah-grid-induk w-full";
             gridDiv.style.direction = "rtl";
             gridDiv.style.setProperty('display', 'flex', 'important');
             gridDiv.style.setProperty('flex-wrap', 'wrap', 'important');
-            gridDiv.style.setProperty('justify-content', 'center', 'important');
+            gridDiv.style.setProperty('justify-content', 'flex-start', 'important');
             gridDiv.style.setProperty('border', 'none', 'important');
             targetDiv.appendChild(gridDiv);
             gridOtomatisSekarang = gridDiv;
@@ -767,7 +767,8 @@
                 targetDiv.appendChild(nodeKlon);
             }
 
-            if (targetDiv.scrollHeight > targetDiv.clientHeight) {
+            // Parobahan wates kalkulasi jangkungna supados kontén ngeusian dugi ka handap
+            if (targetDiv.scrollHeight > (targetDiv.clientHeight + 5)) {
                 if ((nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) && gridOtomatisSekarang) {
                     gridOtomatisSekarang.removeChild(nodeKlon);
                     if (gridOtomatisSekarang.children.length === 0) gridOtomatisSekarang.remove();
