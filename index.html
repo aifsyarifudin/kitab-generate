@@ -715,7 +715,6 @@
     let wadahKoleksiHalamanMentah = [];
     let nomorHalamanVirtual = 1;
     
-    // Wates jangkungna sub-halaman dileutikan sakedik kana 165mm (aman tina kapotong di handap)
     function buatHalamanDOMVirtual(no) {
         const tempDiv = document.createElement('div');
         tempDiv.style.width = '141mm';
@@ -728,7 +727,7 @@
         tempDiv.className = "bg-white text-slate-900";
         
         tempDiv.innerHTML = `
-            <div class="isi-konten-halaman w-full flex-1 overflow-hidden" style="max-height: 175mm;"></div>
+            <div class="isi-konten-halaman w-full flex-1 overflow-hidden" style="max-height: 158mm;"></div>
             <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-1 mt-1 flex justify-between px-1" style="flex-shrink: 0;">
                 <span>Kitab Studio</span>
                 <span class="font-bold text-slate-800 text-[10px] bg-slate-100 px-2 rounded-full">- ${no} -</span>
