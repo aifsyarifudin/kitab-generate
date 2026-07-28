@@ -647,7 +647,8 @@
 
         const wadahBlokKonten = document.createElement('div');
         wadahBlokKonten.style.width = '141mm';
-        wadahBlokKonten.className = "font-sans text-slate-900 text-left invisible absolute top-0 left-0";
+        // PERBAIKAN: Gunakeun visibility hidden sareng posisi relatif/fixed leres supados scrollHeight kabaca ku browser
+        wadahBlokKonten.className = "font-sans text-slate-900 text-left absolute opacity-0 pointer-events-none";
         document.body.appendChild(wadahBlokKonten);
 
         dataFasalDiProses.forEach((fasal) => {
@@ -723,12 +724,11 @@
         wadahKertas.appendChild(halamanDOMVirtual); 
         let targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
 
-        // Tambahkeun ieu supaya div ukurannana akurat dina DOM
         halamanDOMVirtual.style.position = 'absolute';
         halamanDOMVirtual.style.visibility = 'hidden';
         halamanDOMVirtual.style.width = '141mm';
 
-        const TINGGI_MAKSIMAL = 580; // Dikurangan sakedik supados aman teu kapotong
+        const TINGGI_MAKSIMAL = 580; 
         const kumpulanElemen = Array.from(wadahBlokKonten.children);
         let gridOtomatisSekarang = null;
 
@@ -754,7 +754,6 @@
                 targetDiv.appendChild(nodeKlon);
             }
 
-            // Pariksa naha jangkungna ngaleuwihan wates
             if (targetDiv.scrollHeight > TINGGI_MAKSIMAL || targetDiv.offsetHeight > TINGGI_MAKSIMAL) {
                 if ((nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) && gridOtomatisSekarang) {
                     gridOtomatisSekarang.removeChild(nodeKlon);
@@ -763,7 +762,7 @@
                     targetDiv.removeChild(nodeKlon);
                 }
 
-                halamanDOMVirtual.removeAttribute('style'); // Balikeun deui sateuacan disimpen
+                halamanDOMVirtual.removeAttribute('style'); 
                 wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
                 halamanDOMVirtual.remove();
 
