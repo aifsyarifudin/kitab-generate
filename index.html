@@ -35,7 +35,7 @@
         padding: 12mm 12mm;
         display: flex; 
         flex-direction: column; 
-        justify-content: flex-start; /* Diubah tina space-between supados teu mencil */
+        justify-content: flex-start;
     }
 
     .garis-lipat {
@@ -163,7 +163,6 @@
             border-left: 1px dashed #94a3b8 !important; 
         }
 
-        /* GARIS DI KOTAK BANDUNGAN & NADHOMAN DIHILANGKEUN SAAT CETAK */
         .kotak-bandongan-satuan {
             border: none !important;
         }
@@ -623,98 +622,6 @@
         bukaFasalAktip();
     }
 
-    function prosesTeksMenjadiBooklet() {
-    const wadahKertas = document.getElementById('wadah-kertas-cetak');
-    const txtJudulPreview = document.getElementById('judul-preview');
-    if (!wadahKertas) return;
-    wadahKertas.innerHTML = ''; 
-
-    if(txtJudulPreview) {
-        txtJudulPreview.textContent = modeCetak === "terpilih" ? "Sawangan Cetak Buku (Ngan Fasal Nu Dipilih)" : "Sawangan Cetak Buku (Sadaya Fasal Ngagabung)";
-    }
-
-    const dataFasalDiProses = kitabData.filter(fasal => modeCetak === "sadaya" || fasal.dicitak !== false);
-
-    if(dataFasalDiProses.length === 0) {
-        wadahKertas.innerHTML = '<div class="text-center text-slate-500 py-12 text-xs">[Ulah hilap nyeklis fasal dina daptar pikeun dicitak]</div>';
-        return;
-    }
-
-    const wadahBlokKonten = document.createElement('div');
-    wadahBlokKonten.style.width = '141mm';
-    wadahBlokKonten.className = "font-sans text-slate-900 text-left absolute opacity-0 pointer-events-none";
-    document.body.appendChild(wadahBlokKonten);
-
-    dataFasalDiProses.forEach((fasal) => {
-        const judulDiv = document.createElement('div');
-        judulDiv.className = "w-full text-center my-1.5 border-b-2 border-slate-900 pb-0.5 elemen-cetak-tunggal";
-        judulDiv.innerHTML = `<h2 class="text-xs font-extrabold tracking-wider text-slate-900 font-sans uppercase">${fasal.nama}</h2>`;
-        wadahBlokKonten.appendChild(judulDiv);
-
-        fasal.baris.forEach((item) => {
-            if (item.tipe === 'arabfull') {
-                if (item.teks && item.teks.trim()) {
-                    const arabDiv = document.createElement('div');
-                    arabDiv.className = "w-full text-center px-1 my-2 elemen-cetak-tunggal";
-                    arabDiv.innerHTML = `<p class="font-arab text-lg font-medium leading-loose text-slate-950 tracking-wide text-center">${item.teks}</p>`;
-                    wadahBlokKonten.appendChild(arabDiv);
-                }
-            } else if (item.tipe === 'nadoman') {
-                const nadoDiv = document.createElement('div');
-                nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-1.5 py-0.5 space-y-0.5 elemen-cetak-tunggal wadah-nadhoman-cetak";
-                nadoDiv.innerHTML = `
-                    <table class="w-full text-[11px] px-1 border-0" style="table-layout: fixed; width: 100%;">
-                        <tr>
-                            <td class="text-left font-medium text-slate-900 align-top border-0" style="width: 47%; word-wrap: break-word;">${item.bait1 || '&nbsp;'}</td>
-                            <td class="text-center font-bold text-gray-400 align-top border-0" style="width: 6%;">#</td>
-                            <td class="text-left font-medium text-slate-900 align-top border-0" style="width: 47%; word-wrap: break-word;">${item.bait2 || '&nbsp;'}</td>
-                        </tr>
-                    </table>`;
-                wadahBlokKonten.appendChild(nadoDiv);
-            } else if (item.tipe === 'bandongan') {
-                const boxBandongan = document.createElement('div');
-                boxBandongan.className = "p-1 text-center bg-white min-h-[85px] elemen-cetak-tunggal box-border border-0 kotak-bandongan-satuan";
-                
-                boxBandongan.style.setProperty('width', '20%', 'important');
-                boxBandongan.style.setProperty('flex', '0 0 20%', 'important');
-                boxBandongan.style.setProperty('display', 'flex', 'important');
-                boxBandongan.style.setProperty('flex-direction', 'column', 'important');
-                boxBandongan.style.setProperty('justify-content', 'space-between', 'important');
-                boxBandongan.style.setProperty('align-items', 'center', 'important');
-                boxBandongan.style.setProperty('border', 'none', 'important');
-
-                boxBandongan.innerHTML = `
-                    <span class="text-[9px] text-gray-500 italic font-sans block w-full leading-tight" style="direction: ltr;">${item.luhur || '&nbsp;'}</span>
-                    <span class="font-arab text-sm font-bold text-slate-900 leading-snug my-auto block w-full">${item.arab || '&nbsp;'}</span>
-                    <span class="text-[9px] text-slate-700 font-sans block w-full leading-tight" style="direction: ltr;">${item.sunda || '&nbsp;'}</span>
-                `;
-                wadahBlokKonten.appendChild(boxBandongan);
-            }
-        });
-
-        if (fasal.rangkuman && fasal.rangkuman.trim()) {
-            let barisTeks = fasal.rangkuman.split('\n');
-            let htmlBarisRangkuman = '';
-            barisTeks.forEach((baris) => {
-                let styleIndent = /^\s*\d+\./.test(baris.trim()) ? 'padding-left: 20px;' : '';
-                htmlBarisRangkuman += `<div class="text-[10px] font-sans text-slate-900 tracking-wide font-medium" style="${styleIndent}">${baris}</div>`;
-            });
-
-            const rangkumanDiv = document.createElement('div');
-            rangkumanDiv.className = "w-full mt-3 mb-2 font-sans elemen-cetak-tunggal";
-            rangkumanDiv.innerHTML = `
-                <div class="text-[11px] font-bold text-slate-950 uppercase underline tracking-wider mb-1">RANGKUMAN</div>
-                <div class="wadah-rangkuman-cetak border-t border-gray-300">
-                    ${htmlBarisRangkuman}
-                </div>
-            `;
-            wadahBlokKonten.appendChild(rangkumanDiv);
-        }
-    });
-
-    let wadahKoleksiHalamanMentah = [];
-    let nomorHalamanVirtual = 1;
-    
     function buatHalamanDOMVirtual(no) {
         const tempDiv = document.createElement('div');
         tempDiv.style.width = '141mm';
@@ -727,7 +634,7 @@
         tempDiv.className = "bg-white text-slate-900";
         
         tempDiv.innerHTML = `
-            <div class="isi-konten-halaman w-full flex-1 overflow-hidden" style="max-height: 350mm;"></div>
+            <div class="isi-konten-halaman w-full flex-1 overflow-hidden" style="max-height: 170mm;"></div>
             <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-1 mt-1 flex justify-between px-1" style="flex-shrink: 0;">
                 <span>Kitab Studio</span>
                 <span class="font-bold text-slate-800 text-[10px] bg-slate-100 px-2 rounded-full">- ${no} -</span>
@@ -737,119 +644,197 @@
         return tempDiv;
     }
 
-    let halamanDOMVirtual = buatHalamanDOMVirtual(nomorHalamanVirtual);
-    halamanDOMVirtual.style.position = 'absolute';
-    halamanDOMVirtual.style.left = '-9999px';
-    document.body.appendChild(halamanDOMVirtual);
+    function prosesTeksMenjadiBooklet() {
+        const wadahKertas = document.getElementById('wadah-kertas-cetak');
+        const txtJudulPreview = document.getElementById('judul-preview');
+        if (!wadahKertas) return;
+        wadahKertas.innerHTML = ''; 
 
-    let targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
-    const kumpulanElemen = Array.from(wadahBlokKonten.children);
-    let gridOtomatisSekarang = null;
-
-    function jieunGridAnyar() {
-        const gridDiv = document.createElement('div');
-        gridDiv.className = "my-1 wadah-grid-induk w-full";
-        gridDiv.style.direction = "rtl";
-        gridDiv.style.setProperty('display', 'flex', 'important');
-        gridDiv.style.setProperty('flex-wrap', 'wrap', 'important');
-        gridDiv.style.setProperty('justify-content', 'center', 'important');
-        gridDiv.style.setProperty('border', 'none', 'important');
-        targetDiv.appendChild(gridDiv);
-        gridOtomatisSekarang = gridDiv;
-    }
-
-    kumpulanElemen.forEach((el) => {
-        let nodeKlon = el.cloneNode(true);
-        if (nodeKlon.classList.contains('kotak-bandongan-satuan') || (nodeKlon.classList.contains('elemen-cetak-tunggal') && nodeKlon.style.flex)) {
-            if (!gridOtomatisSekarang) { jieunGridAnyar(); }
-            gridOtomatisSekarang.appendChild(nodeKlon);
-        } else {
-            gridOtomatisSekarang = null;
-            targetDiv.appendChild(nodeKlon);
+        if(txtJudulPreview) {
+            txtJudulPreview.textContent = modeCetak === "terpilih" ? "Sawangan Cetak Buku (Ngan Fasal Nu Dipilih)" : "Sawangan Cetak Buku (Sadaya Fasal Ngagabung)";
         }
 
-        if (targetDiv.scrollHeight > targetDiv.clientHeight) {
-            if ((nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) && gridOtomatisSekarang) {
-                gridOtomatisSekarang.removeChild(nodeKlon);
-                if (gridOtomatisSekarang.children.length === 0) gridOtomatisSekarang.remove();
-            } else {
-                targetDiv.removeChild(nodeKlon);
+        const dataFasalDiProses = kitabData.filter(fasal => modeCetak === "sadaya" || fasal.dicitak !== false);
+
+        if(dataFasalDiProses.length === 0) {
+            wadahKertas.innerHTML = '<div class="text-center text-slate-500 py-12 text-xs">[Ulah hilap nyeklis fasal dina daptar pikeun dicitak]</div>';
+            return;
+        }
+
+        const wadahBlokKonten = document.createElement('div');
+        wadahBlokKonten.style.width = '141mm';
+        wadahBlokKonten.className = "font-sans text-slate-900 text-left absolute opacity-0 pointer-events-none";
+        document.body.appendChild(wadahBlokKonten);
+
+        dataFasalDiProses.forEach((fasal) => {
+            const judulDiv = document.createElement('div');
+            judulDiv.className = "w-full text-center my-1.5 border-b-2 border-slate-900 pb-0.5 elemen-cetak-tunggal";
+            judulDiv.innerHTML = `<h2 class="text-xs font-extrabold tracking-wider text-slate-900 font-sans uppercase">${fasal.nama}</h2>`;
+            wadahBlokKonten.appendChild(judulDiv);
+
+            fasal.baris.forEach((item) => {
+                if (item.tipe === 'arabfull') {
+                    if (item.teks && item.teks.trim()) {
+                        const arabDiv = document.createElement('div');
+                        arabDiv.className = "w-full text-center px-1 my-2 elemen-cetak-tunggal";
+                        arabDiv.innerHTML = `<p class="font-arab text-lg font-medium leading-loose text-slate-950 tracking-wide text-center">${item.teks}</p>`;
+                        wadahBlokKonten.appendChild(arabDiv);
+                    }
+                } else if (item.tipe === 'nadoman') {
+                    const nadoDiv = document.createElement('div');
+                    nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-1.5 py-0.5 space-y-0.5 elemen-cetak-tunggal wadah-nadhoman-cetak";
+                    nadoDiv.innerHTML = `
+                        <table class="w-full text-[11px] px-1 border-0" style="table-layout: fixed; width: 100%;">
+                            <tr>
+                                <td class="text-left font-medium text-slate-900 align-top border-0" style="width: 47%; word-wrap: break-word;">${item.bait1 || '&nbsp;'}</td>
+                                <td class="text-center font-bold text-gray-400 align-top border-0" style="width: 6%;">#</td>
+                                <td class="text-left font-medium text-slate-900 align-top border-0" style="width: 47%; word-wrap: break-word;">${item.bait2 || '&nbsp;'}</td>
+                            </tr>
+                        </table>`;
+                    wadahBlokKonten.appendChild(nadoDiv);
+                } else if (item.tipe === 'bandongan') {
+                    const boxBandongan = document.createElement('div');
+                    boxBandongan.className = "p-1 text-center bg-white min-h-[85px] elemen-cetak-tunggal box-border border-0 kotak-bandongan-satuan";
+                    
+                    boxBandongan.style.setProperty('width', '20%', 'important');
+                    boxBandongan.style.setProperty('flex', '0 0 20%', 'important');
+                    boxBandongan.style.setProperty('display', 'flex', 'important');
+                    boxBandongan.style.setProperty('flex-direction', 'column', 'important');
+                    boxBandongan.style.setProperty('justify-content', 'space-between', 'important');
+                    boxBandongan.style.setProperty('align-items', 'center', 'important');
+                    boxBandongan.style.setProperty('border', 'none', 'important');
+
+                    boxBandongan.innerHTML = `
+                        <span class="text-[9px] text-gray-500 italic font-sans block w-full leading-tight" style="direction: ltr;">${item.luhur || '&nbsp;'}</span>
+                        <span class="font-arab text-sm font-bold text-slate-900 leading-snug my-auto block w-full">${item.arab || '&nbsp;'}</span>
+                        <span class="text-[9px] text-slate-700 font-sans block w-full leading-tight" style="direction: ltr;">${item.sunda || '&nbsp;'}</span>
+                    `;
+                    wadahBlokKonten.appendChild(boxBandongan);
+                }
+            });
+
+            if (fasal.rangkuman && fasal.rangkuman.trim()) {
+                let barisTeks = fasal.rangkuman.split('\n');
+                let htmlBarisRangkuman = '';
+                barisTeks.forEach((baris) => {
+                    let styleIndent = /^\s*\d+\./.test(baris.trim()) ? 'padding-left: 20px;' : '';
+                    htmlBarisRangkuman += `<div class="text-[10px] font-sans text-slate-900 tracking-wide font-medium" style="${styleIndent}">${baris}</div>`;
+                });
+
+                const rangkumanDiv = document.createElement('div');
+                rangkumanDiv.className = "w-full mt-3 mb-2 font-sans elemen-cetak-tunggal";
+                rangkumanDiv.innerHTML = `
+                    <div class="text-[11px] font-bold text-slate-950 uppercase underline tracking-wider mb-1">RANGKUMAN</div>
+                    <div class="wadah-rangkuman-cetak border-t border-gray-300">
+                        ${htmlBarisRangkuman}
+                    </div>
+                `;
+                wadahBlokKonten.appendChild(rangkumanDiv);
             }
+        });
 
-            wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
-            halamanDOMVirtual.remove();
+        let wadahKoleksiHalamanMentah = [];
+        let nomorHalamanVirtual = 1;
 
-            nomorHalamanVirtual++;
-            halamanDOMVirtual = buatHalamanDOMVirtual(nomorHalamanVirtual);
-            halamanDOMVirtual.style.position = 'absolute';
-            halamanDOMVirtual.style.left = '-9999px';
-            document.body.appendChild(halamanDOMVirtual);
+        let halamanDOMVirtual = buatHalamanDOMVirtual(nomorHalamanVirtual);
+        halamanDOMVirtual.style.position = 'absolute';
+        halamanDOMVirtual.style.left = '-9999px';
+        document.body.appendChild(halamanDOMVirtual);
 
-            targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
-            gridOtomatisSekarang = null;
+        let targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
+        const kumpulanElemen = Array.from(wadahBlokKonten.children);
+        let gridOtomatisSekarang = null;
 
-            nodeKlon = el.cloneNode(true);
-            if (nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) {
-                jieunGridAnyar();
+        function jieunGridAnyar() {
+            const gridDiv = document.createElement('div');
+            gridDiv.className = "my-1 wadah-grid-induk w-full";
+            gridDiv.style.direction = "rtl";
+            gridDiv.style.setProperty('display', 'flex', 'important');
+            gridDiv.style.setProperty('flex-wrap', 'wrap', 'important');
+            gridDiv.style.setProperty('justify-content', 'center', 'important');
+            gridDiv.style.setProperty('border', 'none', 'important');
+            targetDiv.appendChild(gridDiv);
+            gridOtomatisSekarang = gridDiv;
+        }
+
+        kumpulanElemen.forEach((el) => {
+            let nodeKlon = el.cloneNode(true);
+            if (nodeKlon.classList.contains('kotak-bandongan-satuan') || (nodeKlon.classList.contains('elemen-cetak-tunggal') && nodeKlon.style.flex)) {
+                if (!gridOtomatisSekarang) { jieunGridAnyar(); }
                 gridOtomatisSekarang.appendChild(nodeKlon);
             } else {
+                gridOtomatisSekarang = null;
                 targetDiv.appendChild(nodeKlon);
             }
+
+            if (targetDiv.scrollHeight > targetDiv.clientHeight) {
+                if ((nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) && gridOtomatisSekarang) {
+                    gridOtomatisSekarang.removeChild(nodeKlon);
+                    if (gridOtomatisSekarang.children.length === 0) gridOtomatisSekarang.remove();
+                } else {
+                    targetDiv.removeChild(nodeKlon);
+                }
+
+                wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
+                halamanDOMVirtual.remove();
+
+                nomorHalamanVirtual++;
+                halamanDOMVirtual = buatHalamanDOMVirtual(nomorHalamanVirtual);
+                halamanDOMVirtual.style.position = 'absolute';
+                halamanDOMVirtual.style.left = '-9999px';
+                document.body.appendChild(halamanDOMVirtual);
+
+                targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
+                gridOtomatisSekarang = null;
+
+                nodeKlon = el.cloneNode(true);
+                if (nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) {
+                    jieunGridAnyar();
+                    gridOtomatisSekarang.appendChild(nodeKlon);
+                } else {
+                    targetDiv.appendChild(nodeKlon);
+                }
+            }
+        });
+
+        wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
+        halamanDOMVirtual.remove();
+        document.body.removeChild(wadahBlokKonten);
+
+        while (wadahKoleksiHalamanMentah.length % 4 !== 0) {
+            nomorHalamanVirtual++;
+            let blankPage = buatHalamanDOMVirtual(nomorHalamanVirtual);
+            blankPage.querySelector('.isi-konten-halaman').innerHTML = `<div class="text-center text-gray-300 italic pt-24 text-xs">[Catetan Kosong]</div>`;
+            wadahKoleksiHalamanMentah.push(blankPage.innerHTML);
         }
-    });
 
-    wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
-    halamanDOMVirtual.remove();
-    document.body.removeChild(wadahBlokKonten);
-
-    while (wadahKoleksiHalamanMentah.length % 4 !== 0) {
-        nomorHalamanVirtual++;
-        let blankPage = buatHalamanDOMVirtual(nomorHalamanVirtual);
-        blankPage.querySelector('.isi-konten-halaman').innerHTML = `<div class="text-center text-gray-300 italic pt-24 text-xs">[Catetan Kosong]</div>`;
-        wadahKoleksiHalamanMentah.push(blankPage.innerHTML);
-    }
-
-    let totalHalaman = wadahKoleksiHalamanMentah.length;
-    
-    for (let i = 0; i < totalHalaman / 4; i++) {
-        let kiriDepan = totalHalaman - 1 - (i * 2);
-        let kananDepan = 0 + (i * 2);
+        let totalHalaman = wadahKoleksiHalamanMentah.length;
         
-        let lembarF4Depan = document.createElement('div');
-        lembarF4Depan.className = "lembar-f4-cetak";
-        lembarF4Depan.innerHTML = `
-            <div class="garis-lipat"></div>
-            <div class="sub-halaman border-r border-gray-100">${wadahKoleksiHalamanMentah[kiriDepan]}</div>
-            <div class="sub-halaman">${wadahKoleksiHalamanMentah[kananDepan]}</div>
-        `;
-        wadahKertas.appendChild(lembarF4Depan);
+        for (let i = 0; i < totalHalaman / 4; i++) {
+            let kiriDepan = totalHalaman - 1 - (i * 2);
+            let kananDepan = 0 + (i * 2);
+            
+            let lembarF4Depan = document.createElement('div');
+            lembarF4Depan.className = "lembar-f4-cetak";
+            lembarF4Depan.innerHTML = `
+                <div class="garis-lipat"></div>
+                <div class="sub-halaman border-r border-gray-100">${wadahKoleksiHalamanMentah[kiriDepan]}</div>
+                <div class="sub-halaman">${wadahKoleksiHalamanMentah[kananDepan]}</div>
+            `;
+            wadahKertas.appendChild(lembarF4Depan);
 
-        let kiriBelakang = 1 + (i * 2);
-        let kananBelakang = totalHalaman - 2 - (i * 2);
-        
-        let lembarF4Belakang = document.createElement('div');
-        lembarF4Belakang.className = "lembar-f4-cetak";
-        lembarF4Belakang.innerHTML = `
-            <div class="garis-lipat"></div>
-            <div class="sub-halaman border-r border-gray-100">${wadahKoleksiHalamanMentah[kiriBelakang]}</div>
-            <div class="sub-halaman">${wadahKoleksiHalamanMentah[kananBelakang]}</div>
-        `;
-        wadahKertas.appendChild(lembarF4Belakang);
-    }
-}
-
-    function buatHalamanDOMVirtual(no) {
-        const tempDiv = document.createElement('div');
-        tempDiv.className = "w-full h-full flex flex-col justify-between";
-        tempDiv.innerHTML = `
-            <div class="isi-konten-halaman flex-1 overflow-hidden"></div>
-            <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-1 mt-1 flex justify-between px-1">
-                <span>Kitab Studio</span>
-                <span class="font-bold text-slate-800 text-[10px] bg-slate-100 px-2 rounded-full">- ${no} -</span>
-                <span>Matan, Lughot, Ringkesan & Nadoman</span>
-            </div>
-        `;
-        return tempDiv;
+            let kiriBelakang = 1 + (i * 2);
+            let kananBelakang = totalHalaman - 2 - (i * 2);
+            
+            let lembarF4Belakang = document.createElement('div');
+            lembarF4Belakang.className = "lembar-f4-cetak";
+            lembarF4Belakang.innerHTML = `
+                <div class="garis-lipat"></div>
+                <div class="sub-halaman border-r border-gray-100">${wadahKoleksiHalamanMentah[kiriBelakang]}</div>
+                <div class="sub-halaman">${wadahKoleksiHalamanMentah[kananBelakang]}</div>
+            `;
+            wadahKertas.appendChild(lembarF4Belakang);
+        }
     }
 
     function cetakBuku(mode) {
