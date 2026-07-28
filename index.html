@@ -640,7 +640,6 @@
         return;
     }
 
-    // 1. Wadah pikeun ngumpulkeun sakabéh elemen data kitab
     const wadahBlokKonten = document.createElement('div');
     wadahBlokKonten.style.width = '141mm';
     wadahBlokKonten.className = "font-sans text-slate-900 text-left absolute opacity-0 pointer-events-none";
@@ -648,7 +647,7 @@
 
     dataFasalDiProses.forEach((fasal) => {
         const judulDiv = document.createElement('div');
-        judulDiv.className = "w-full text-center my-2 border-b-2 border-slate-900 pb-0.5 elemen-cetak-tunggal";
+        judulDiv.className = "w-full text-center my-1.5 border-b-2 border-slate-900 pb-0.5 elemen-cetak-tunggal";
         judulDiv.innerHTML = `<h2 class="text-xs font-extrabold tracking-wider text-slate-900 font-sans uppercase">${fasal.nama}</h2>`;
         wadahBlokKonten.appendChild(judulDiv);
 
@@ -656,13 +655,13 @@
             if (item.tipe === 'arabfull') {
                 if (item.teks && item.teks.trim()) {
                     const arabDiv = document.createElement('div');
-                    arabDiv.className = "w-full text-center px-1 my-3 elemen-cetak-tunggal";
-                    arabDiv.innerHTML = `<p class="font-arab text-xl font-medium leading-loose text-slate-950 tracking-wide text-center">${item.teks}</p>`;
+                    arabDiv.className = "w-full text-center px-1 my-2 elemen-cetak-tunggal";
+                    arabDiv.innerHTML = `<p class="font-arab text-lg font-medium leading-loose text-slate-950 tracking-wide text-center">${item.teks}</p>`;
                     wadahBlokKonten.appendChild(arabDiv);
                 }
             } else if (item.tipe === 'nadoman') {
                 const nadoDiv = document.createElement('div');
-                nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-2 py-1 space-y-0.5 elemen-cetak-tunggal wadah-nadhoman-cetak";
+                nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-1.5 py-0.5 space-y-0.5 elemen-cetak-tunggal wadah-nadhoman-cetak";
                 nadoDiv.innerHTML = `
                     <table class="w-full text-[11px] px-1 border-0" style="table-layout: fixed; width: 100%;">
                         <tr>
@@ -674,7 +673,7 @@
                 wadahBlokKonten.appendChild(nadoDiv);
             } else if (item.tipe === 'bandongan') {
                 const boxBandongan = document.createElement('div');
-                boxBandongan.className = "p-1 text-center bg-white min-h-[95px] elemen-cetak-tunggal box-border border-0 kotak-bandongan-satuan";
+                boxBandongan.className = "p-1 text-center bg-white min-h-[85px] elemen-cetak-tunggal box-border border-0 kotak-bandongan-satuan";
                 
                 boxBandongan.style.setProperty('width', '20%', 'important');
                 boxBandongan.style.setProperty('flex', '0 0 20%', 'important');
@@ -685,9 +684,9 @@
                 boxBandongan.style.setProperty('border', 'none', 'important');
 
                 boxBandongan.innerHTML = `
-                    <span class="text-[10px] text-gray-500 italic font-sans block w-full" style="direction: ltr;">${item.luhur || '&nbsp;'}</span>
-                    <span class="font-arab text-base font-bold text-slate-900 leading-normal my-auto block w-full">${item.arab || '&nbsp;'}</span>
-                    <span class="text-[10px] text-slate-700 font-sans block w-full" style="direction: ltr;">${item.sunda || '&nbsp;'}</span>
+                    <span class="text-[9px] text-gray-500 italic font-sans block w-full leading-tight" style="direction: ltr;">${item.luhur || '&nbsp;'}</span>
+                    <span class="font-arab text-sm font-bold text-slate-900 leading-snug my-auto block w-full">${item.arab || '&nbsp;'}</span>
+                    <span class="text-[9px] text-slate-700 font-sans block w-full leading-tight" style="direction: ltr;">${item.sunda || '&nbsp;'}</span>
                 `;
                 wadahBlokKonten.appendChild(boxBandongan);
             }
@@ -697,14 +696,14 @@
             let barisTeks = fasal.rangkuman.split('\n');
             let htmlBarisRangkuman = '';
             barisTeks.forEach((baris) => {
-                let styleIndent = /^\s*\d+\./.test(baris.trim()) ? 'padding-left: 24px;' : '';
-                htmlBarisRangkuman += `<div class="text-[11px] font-sans text-slate-900 tracking-wide font-medium" style="${styleIndent}">${baris}</div>`;
+                let styleIndent = /^\s*\d+\./.test(baris.trim()) ? 'padding-left: 20px;' : '';
+                htmlBarisRangkuman += `<div class="text-[10px] font-sans text-slate-900 tracking-wide font-medium" style="${styleIndent}">${baris}</div>`;
             });
 
             const rangkumanDiv = document.createElement('div');
-            rangkumanDiv.className = "w-full mt-4 mb-2 font-sans elemen-cetak-tunggal";
+            rangkumanDiv.className = "w-full mt-3 mb-2 font-sans elemen-cetak-tunggal";
             rangkumanDiv.innerHTML = `
-                <div class="text-xs font-bold text-slate-950 uppercase underline tracking-wider mb-1">RANGKUMAN</div>
+                <div class="text-[11px] font-bold text-slate-950 uppercase underline tracking-wider mb-1">RANGKUMAN</div>
                 <div class="wadah-rangkuman-cetak border-t border-gray-300">
                     ${htmlBarisRangkuman}
                 </div>
@@ -716,12 +715,12 @@
     let wadahKoleksiHalamanMentah = [];
     let nomorHalamanVirtual = 1;
     
-    // 2. Fungsi pikeun nyieun mockup halaman virtual ukuran F4 luhurna ditangtayungan pas
+    // Wates jangkungna sub-halaman dileutikan sakedik kana 165mm (aman tina kapotong di handap)
     function buatHalamanDOMVirtual(no) {
         const tempDiv = document.createElement('div');
         tempDiv.style.width = '141mm';
-        tempDiv.style.height = '191mm'; // Ukuran bersih jangkungna sub-halaman (215mm dikurangi padding 12mm luhur-handap)
-        tempDiv.style.maxHeight = '191mm';
+        tempDiv.style.height = '175mm'; 
+        tempDiv.style.maxHeight = '175mm';
         tempDiv.style.display = 'flex';
         tempDiv.style.flexDirection = 'column';
         tempDiv.style.justifyContent = 'space-between';
@@ -729,7 +728,7 @@
         tempDiv.className = "bg-white text-slate-900";
         
         tempDiv.innerHTML = `
-            <div class="isi-konten-halaman w-full flex-1 overflow-hidden" style="max-height: 175mm;"></div>
+            <div class="isi-konten-halaman w-full flex-1 overflow-hidden" style="max-height: 160mm;"></div>
             <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-1 mt-1 flex justify-between px-1" style="flex-shrink: 0;">
                 <span>Kitab Studio</span>
                 <span class="font-bold text-slate-800 text-[10px] bg-slate-100 px-2 rounded-full">- ${no} -</span>
@@ -760,7 +759,6 @@
         gridOtomatisSekarang = gridDiv;
     }
 
-    // 3. Loop mariksa elemen hiji-hiji kana halaman virtual
     kumpulanElemen.forEach((el) => {
         let nodeKlon = el.cloneNode(true);
         if (nodeKlon.classList.contains('kotak-bandongan-satuan') || (nodeKlon.classList.contains('elemen-cetak-tunggal') && nodeKlon.style.flex)) {
@@ -771,7 +769,6 @@
             targetDiv.appendChild(nodeKlon);
         }
 
-        // Upami eusi na geus ngeusian jangkungna targetDiv, pindahkeun ka kaca salajengna
         if (targetDiv.scrollHeight > targetDiv.clientHeight) {
             if ((nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) && gridOtomatisSekarang) {
                 gridOtomatisSekarang.removeChild(nodeKlon);
@@ -806,7 +803,6 @@
     halamanDOMVirtual.remove();
     document.body.removeChild(wadahBlokKonten);
 
-    // 4. Pastikeun jumlah halaman kelipatan 4 pikeun format buku lipat tengah (sadaya sésana ditambihan halaman kosong di tungtung)
     while (wadahKoleksiHalamanMentah.length % 4 !== 0) {
         nomorHalamanVirtual++;
         let blankPage = buatHalamanDOMVirtual(nomorHalamanVirtual);
@@ -816,7 +812,6 @@
 
     let totalHalaman = wadahKoleksiHalamanMentah.length;
     
-    // 5. Susun kana lembar F4 cetak (Booklet Layout)
     for (let i = 0; i < totalHalaman / 4; i++) {
         let kiriDepan = totalHalaman - 1 - (i * 2);
         let kananDepan = 0 + (i * 2);
