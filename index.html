@@ -640,6 +640,7 @@
         return;
     }
 
+    // 1. Wadah pikeun ngumpulkeun sakabéh elemen data kitab
     const wadahBlokKonten = document.createElement('div');
     wadahBlokKonten.style.width = '141mm';
     wadahBlokKonten.className = "font-sans text-slate-900 text-left absolute opacity-0 pointer-events-none";
@@ -714,16 +715,36 @@
 
     let wadahKoleksiHalamanMentah = [];
     let nomorHalamanVirtual = 1;
-    let halamanDOMVirtual = buatHalamanDOMVirtual(nomorHalamanVirtual);
     
-    // Pasang heula kana dokumen sakedap supados tiasa diitung ukuran render aslina (teu `display: none`)
+    // 2. Fungsi pikeun nyieun mockup halaman virtual ukuran F4 luhurna ditangtayungan pas
+    function buatHalamanDOMVirtual(no) {
+        const tempDiv = document.createElement('div');
+        tempDiv.style.width = '141mm';
+        tempDiv.style.height = '191mm'; // Ukuran bersih jangkungna sub-halaman (215mm dikurangi padding 12mm luhur-handap)
+        tempDiv.style.maxHeight = '191mm';
+        tempDiv.style.display = 'flex';
+        tempDiv.style.flexDirection = 'column';
+        tempDiv.style.justifyContent = 'space-between';
+        tempDiv.style.overflow = 'hidden';
+        tempDiv.className = "bg-white text-slate-900";
+        
+        tempDiv.innerHTML = `
+            <div class="isi-konten-halaman w-full flex-1 overflow-hidden" style="max-height: 175mm;"></div>
+            <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-1 mt-1 flex justify-between px-1" style="flex-shrink: 0;">
+                <span>Kitab Studio</span>
+                <span class="font-bold text-slate-800 text-[10px] bg-slate-100 px-2 rounded-full">- ${no} -</span>
+                <span>Matan, Lughot, Ringkesan & Nadoman</span>
+            </div>
+        `;
+        return tempDiv;
+    }
+
+    let halamanDOMVirtual = buatHalamanDOMVirtual(nomorHalamanVirtual);
     halamanDOMVirtual.style.position = 'absolute';
     halamanDOMVirtual.style.left = '-9999px';
-    halamanDOMVirtual.style.width = '141mm';
     document.body.appendChild(halamanDOMVirtual);
 
     let targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
-    const TINGGI_MAKSIMAL = 600; // Dikontrol langkung pas supados ngeusi satengah kaca kalayan optimal
     const kumpulanElemen = Array.from(wadahBlokKonten.children);
     let gridOtomatisSekarang = null;
 
@@ -739,6 +760,7 @@
         gridOtomatisSekarang = gridDiv;
     }
 
+    // 3. Loop mariksa elemen hiji-hiji kana halaman virtual
     kumpulanElemen.forEach((el) => {
         let nodeKlon = el.cloneNode(true);
         if (nodeKlon.classList.contains('kotak-bandongan-satuan') || (nodeKlon.classList.contains('elemen-cetak-tunggal') && nodeKlon.style.flex)) {
@@ -749,9 +771,8 @@
             targetDiv.appendChild(nodeKlon);
         }
 
-        // Cek naha jangkungna tos ngaleuwihan wates
-        if (targetDiv.scrollHeight > TINGGI_MAKSIMAL) {
-            // Tarik deui elemen anu kakara dipasang
+        // Upami eusi na geus ngeusian jangkungna targetDiv, pindahkeun ka kaca salajengna
+        if (targetDiv.scrollHeight > targetDiv.clientHeight) {
             if ((nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) && gridOtomatisSekarang) {
                 gridOtomatisSekarang.removeChild(nodeKlon);
                 if (gridOtomatisSekarang.children.length === 0) gridOtomatisSekarang.remove();
@@ -759,7 +780,6 @@
                 targetDiv.removeChild(nodeKlon);
             }
 
-            // Simpen kaca ieu, teras damel kaca enggal
             wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
             halamanDOMVirtual.remove();
 
@@ -767,13 +787,11 @@
             halamanDOMVirtual = buatHalamanDOMVirtual(nomorHalamanVirtual);
             halamanDOMVirtual.style.position = 'absolute';
             halamanDOMVirtual.style.left = '-9999px';
-            halamanDOMVirtual.style.width = '141mm';
             document.body.appendChild(halamanDOMVirtual);
 
             targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
             gridOtomatisSekarang = null;
 
-            // Pasang deui elemen anu tadi kasiksa pindah
             nodeKlon = el.cloneNode(true);
             if (nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) {
                 jieunGridAnyar();
@@ -784,12 +802,11 @@
         }
     });
 
-    // Simpen sésana
     wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
     halamanDOMVirtual.remove();
     document.body.removeChild(wadahBlokKonten);
 
-    // Tambahkeun halaman kosong nepi ka pas kelipatan 4
+    // 4. Pastikeun jumlah halaman kelipatan 4 pikeun format buku lipat tengah (sadaya sésana ditambihan halaman kosong di tungtung)
     while (wadahKoleksiHalamanMentah.length % 4 !== 0) {
         nomorHalamanVirtual++;
         let blankPage = buatHalamanDOMVirtual(nomorHalamanVirtual);
@@ -799,7 +816,7 @@
 
     let totalHalaman = wadahKoleksiHalamanMentah.length;
     
-    // Susun booklet lipat tengah
+    // 5. Susun kana lembar F4 cetak (Booklet Layout)
     for (let i = 0; i < totalHalaman / 4; i++) {
         let kiriDepan = totalHalaman - 1 - (i * 2);
         let kananDepan = 0 + (i * 2);
@@ -809,7 +826,7 @@
         lembarF4Depan.innerHTML = `
             <div class="garis-lipat"></div>
             <div class="sub-halaman border-r border-gray-100">${wadahKoleksiHalamanMentah[kiriDepan]}</div>
-            <div class="sub-halaman">${wadahKoleksiHalamanMentah[kananDepanamel || kananDepan]}</div>
+            <div class="sub-halaman">${wadahKoleksiHalamanMentah[kananDepan]}</div>
         `;
         wadahKertas.appendChild(lembarF4Depan);
 
