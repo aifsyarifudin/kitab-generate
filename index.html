@@ -723,13 +723,18 @@
         wadahKertas.appendChild(halamanDOMVirtual); 
         let targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
 
-        const TINGGI_MAKSIMAL = 680; 
+        // Tambahkeun ieu supaya div ukurannana akurat dina DOM
+        halamanDOMVirtual.style.position = 'absolute';
+        halamanDOMVirtual.style.visibility = 'hidden';
+        halamanDOMVirtual.style.width = '141mm';
+
+        const TINGGI_MAKSIMAL = 580; // Dikurangan sakedik supados aman teu kapotong
         const kumpulanElemen = Array.from(wadahBlokKonten.children);
         let gridOtomatisSekarang = null;
 
         function jieunGridAnyar() {
             const gridDiv = document.createElement('div');
-            gridDiv.className = "my-2 wadah-grid-induk w-full";
+            gridDiv.className = "my-1 wadah-grid-induk w-full";
             gridDiv.style.direction = "rtl";
             gridDiv.style.setProperty('display', 'flex', 'important');
             gridDiv.style.setProperty('flex-wrap', 'wrap', 'important');
@@ -749,7 +754,7 @@
                 targetDiv.appendChild(nodeKlon);
             }
 
-            // Pariksa naha jangkungna ngaleuwihan wates. Upami enya, kotak anu nembe lebet dipindahkeun ka halaman payun
+            // Pariksa naha jangkungna ngaleuwihan wates
             if (targetDiv.scrollHeight > TINGGI_MAKSIMAL || targetDiv.offsetHeight > TINGGI_MAKSIMAL) {
                 if ((nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) && gridOtomatisSekarang) {
                     gridOtomatisSekarang.removeChild(nodeKlon);
@@ -758,12 +763,18 @@
                     targetDiv.removeChild(nodeKlon);
                 }
 
+                halamanDOMVirtual.removeAttribute('style'); // Balikeun deui sateuacan disimpen
                 wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
                 halamanDOMVirtual.remove();
 
                 nomorHalamanVirtual++;
                 halamanDOMVirtual = buatHalamanDOMVirtual(nomorHalamanVirtual);
                 wadahKertas.appendChild(halamanDOMVirtual);
+                
+                halamanDOMVirtual.style.position = 'absolute';
+                halamanDOMVirtual.style.visibility = 'hidden';
+                halamanDOMVirtual.style.width = '141mm';
+
                 targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
                 
                 nodeKlon = el.cloneNode(true);
@@ -777,6 +788,7 @@
             }
         });
 
+        halamanDOMVirtual.removeAttribute('style');
         wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
         halamanDOMVirtual.remove();
         document.body.removeChild(wadahBlokKonten);
