@@ -792,6 +792,7 @@
         halamanDOMVirtual.remove();
         document.body.removeChild(wadahBlokKonten);
 
+        // Tambahkeun halaman kosong nepi ka pas kelipatan 4 DI TUNGTUNG (bukan di awal)
         while (wadahKoleksiHalamanMentah.length % 4 !== 0) {
             nomorHalamanVirtual++;
             let blankPage = buatHalamanDOMVirtual(nomorHalamanVirtual);
@@ -800,24 +801,30 @@
         }
 
         let totalHalaman = wadahKoleksiHalamanMentah.length;
+        
+        // Loop susunan booklet lipat tengah anu bener (halaman 1 mimitian ti index 0)
         for (let i = 0; i < totalHalaman / 4; i++) {
-            let depanKiri = totalHalaman - 1 - (i * 2), depanKanan = 0 + (i * 2);
+            let kiriDepan = totalHalaman - 1 - (i * 2);
+            let kananDepan = 0 + (i * 2);
+            
             let lembarF4Depan = document.createElement('div');
             lembarF4Depan.className = "lembar-f4-cetak";
             lembarF4Depan.innerHTML = `
                 <div class="garis-lipat"></div>
-                <div class="sub-halaman border-r border-gray-100">${wadahKoleksiHalamanMentah[depanKiri]}</div>
-                <div class="sub-halaman">${wadahKoleksiHalamanMentah[depanKanan]}</div>
+                <div class="sub-halaman border-r border-gray-100">${wadahKoleksiHalamanMentah[kiriDepan]}</div>
+                <div class="sub-halaman">${wadahKoleksiHalamanMentah[kananDepan]}</div>
             `;
             wadahKertas.appendChild(lembarF4Depan);
 
-            let belakangKiri = 1 + (i * 2), belakangKanan = totalHalaman - 2 - (i * 2);
+            let kiriBelakang = 1 + (i * 2);
+            let kananBelakang = totalHalaman - 2 - (i * 2);
+            
             let lembarF4Belakang = document.createElement('div');
             lembarF4Belakang.className = "lembar-f4-cetak";
             lembarF4Belakang.innerHTML = `
                 <div class="garis-lipat"></div>
-                <div class="sub-halaman border-r border-gray-100">${wadahKoleksiHalamanMentah[belakangKiri]}</div>
-                <div class="sub-halaman">${wadahKoleksiHalamanMentah[belakangKanan]}</div>
+                <div class="sub-halaman border-r border-gray-100">${wadahKoleksiHalamanMentah[kiriBelakang]}</div>
+                <div class="sub-halaman">${wadahKoleksiHalamanMentah[kananBelakang]}</div>
             `;
             wadahKertas.appendChild(lembarF4Belakang);
         }
