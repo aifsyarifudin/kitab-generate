@@ -723,7 +723,7 @@
         wadahKertas.appendChild(halamanDOMVirtual); 
         let targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
 
-        const TINGGI_MAKSIMAL = 690; 
+        const TINGGI_MAKSIMAL = 680; 
         const kumpulanElemen = Array.from(wadahBlokKonten.children);
         let gridOtomatisSekarang = null;
 
@@ -749,6 +749,7 @@
                 targetDiv.appendChild(nodeKlon);
             }
 
+            // Pariksa naha jangkungna ngaleuwihan wates. Upami enya, kotak anu nembe lebet dipindahkeun ka halaman payun
             if (targetDiv.scrollHeight > TINGGI_MAKSIMAL || targetDiv.offsetHeight > TINGGI_MAKSIMAL) {
                 if ((nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) && gridOtomatisSekarang) {
                     gridOtomatisSekarang.removeChild(nodeKlon);
