@@ -723,11 +723,16 @@
         wadahKertas.appendChild(halamanDOMVirtual); 
         let targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
 
-        const TINGGI_MAKSIMAL = 570; // Wates jangkungna aman supados teu kapotong
+        // Tambahkeun ieu supaya div ukurannana akurat dina DOM
+        halamanDOMVirtual.style.position = 'absolute';
+        halamanDOMVirtual.style.visibility = 'hidden';
+        halamanDOMVirtual.style.width = '141mm';
+
+        const TINGGI_MAKSIMAL = 580; // Dikurangan sakedik supados aman teu kapotong
         const kumpulanElemen = Array.from(wadahBlokKonten.children);
         let gridOtomatisSekarang = null;
 
-        function jieunGridAnyar(parentTarget) {
+        function jieunGridAnyar() {
             const gridDiv = document.createElement('div');
             gridDiv.className = "my-1 wadah-grid-induk w-full";
             gridDiv.style.direction = "rtl";
@@ -735,66 +740,55 @@
             gridDiv.style.setProperty('flex-wrap', 'wrap', 'important');
             gridDiv.style.setProperty('justify-content', 'center', 'important');
             gridDiv.style.setProperty('border', 'none', 'important');
-            parentTarget.appendChild(gridDiv);
-            return gridDiv;
+            targetDiv.appendChild(gridDiv);
+            gridOtomatisSekarang = gridDiv;
         }
-
-        // Fungsi bantu pikeun nyieun halaman anyar
-        function tambahHalamanBaru() {
-            halamanDOMVirtual.style.display = ''; // Témbongkeun sakedap kanggo kalkulasi
-            wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
-            halamanDOMVirtual.remove();
-
-            nomorHalamanVirtual++;
-            halamanDOMVirtual = buatHalamanDOMVirtual(nomorHalamanVirtual);
-            wadahKertas.appendChild(halamanDOMVirtual);
-            targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
-            gridOtomatisSekarang = null;
-        }
-
-        // Pasang heula halaman virtual ka DOM supados scrollHeight-na akurat
-        halamanDOMVirtual.style.position = 'absolute';
-        halamanDOMVirtual.style.visibility = 'hidden';
-        halamanDOMVirtual.style.width = '141mm';
 
         kumpulanElemen.forEach((el) => {
-            let isBandongan = el.classList.contains('kotak-bandongan-satuan') || (el.classList.contains('elemen-cetak-tunggal') && el.style.flex);
-
-            if (isBandongan) {
-                if (!gridOtomatisSekarang) {
-                    gridOtomatisSekarang = jieunGridAnyar(targetDiv);
-                }
-                gridOtomatisSekarang.appendChild(el);
+            let nodeKlon = el.cloneNode(true);
+            if (nodeKlon.classList.contains('kotak-bandongan-satuan') || (nodeKlon.classList.contains('elemen-cetak-tunggal') && nodeKlon.style.flex)) {
+                if (!gridOtomatisSekarang) { jieunGridAnyar(); }
+                gridOtomatisSekarang.appendChild(nodeKlon);
             } else {
                 gridOtomatisSekarang = null;
-                targetDiv.appendChild(el);
+                targetDiv.appendChild(nodeKlon);
             }
 
-            // Pariksa naha jangkungna eusi ngaleuwihan wates maksimal
-            if (targetDiv.scrollHeight > TINGGI_MAKSIMAL) {
-                // Cabut deui elemen anu kakara Asup
-                if (isBandongan && gridOtomatisSekarang) {
-                    gridOtomatisSekarang.removeChild(el);
+            // Pariksa naha jangkungna ngaleuwihan wates
+            if (targetDiv.scrollHeight > TINGGI_MAKSIMAL || targetDiv.offsetHeight > TINGGI_MAKSIMAL) {
+                if ((nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) && gridOtomatisSekarang) {
+                    gridOtomatisSekarang.removeChild(nodeKlon);
                     if (gridOtomatisSekarang.children.length === 0) gridOtomatisSekarang.remove();
                 } else {
-                    targetDiv.removeChild(el);
+                    targetDiv.removeChild(nodeKlon);
                 }
 
-                // Pindah ka halaman anyar
-                tambahHalamanBaru();
+                halamanDOMVirtual.removeAttribute('style'); // Balikeun deui sateuacan disimpen
+                wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
+                halamanDOMVirtual.remove();
 
-                // Lebetkeun deui elemen anu tadi ka halaman énggal
-                if (isBandongan) {
-                    gridOtomatisSekarang = jieunGridAnyar(targetDiv);
-                    gridOtomatisSekarang.appendChild(el);
+                nomorHalamanVirtual++;
+                halamanDOMVirtual = buatHalamanDOMVirtual(nomorHalamanVirtual);
+                wadahKertas.appendChild(halamanDOMVirtual);
+                
+                halamanDOMVirtual.style.position = 'absolute';
+                halamanDOMVirtual.style.visibility = 'hidden';
+                halamanDOMVirtual.style.width = '141mm';
+
+                targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
+                
+                nodeKlon = el.cloneNode(true);
+                if (nodeKlon.classList.contains('kotak-bandongan-satuan') || nodeKlon.style.flex) {
+                    jieunGridAnyar();
+                    gridOtomatisSekarang.appendChild(nodeKlon);
                 } else {
                     gridOtomatisSekarang = null;
-                    targetDiv.appendChild(el);
+                    targetDiv.appendChild(nodeKlon);
                 }
             }
         });
 
-        halamanDOMVirtual.style.display = '';
+        halamanDOMVirtual.removeAttribute('style');
         wadahKoleksiHalamanMentah.push(halamanDOMVirtual.innerHTML);
         halamanDOMVirtual.remove();
         document.body.removeChild(wadahBlokKonten);
