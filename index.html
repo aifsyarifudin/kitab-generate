@@ -20,27 +20,22 @@
     /* 2. LAYOUT KERTAS (PREVIEW APLIKASI) */
     .lembar-f4-cetak {
         width: 330mm; 
-        height: 215mm;
-        min-width: 330mm;
         min-height: 215mm;
-        max-height: 215mm;
         background-color: #ffffff; 
         color: #1e293b;
         box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         display: flex; 
         position: relative; 
-        overflow: hidden; 
         margin: 20px auto;
     }
 
     .sub-halaman {
         width: 165mm; 
-        height: 215mm; 
+        min-height: 215mm; 
         padding: 12mm 12mm;
         display: flex; 
         flex-direction: column; 
-        justify-content: space-between; 
-        overflow: hidden;
+        justify-content: flex-start; /* Diubah tina space-between supados teu mencil */
     }
 
     .garis-lipat {
@@ -137,7 +132,6 @@
             flex-direction: row !important;
             width: 330mm !important; 
             height: 215mm !important;
-            min-width: 330mm !important;
             min-height: 215mm !important;
             max-height: 215mm !important;
             background: #ffffff !important;
@@ -162,6 +156,7 @@
             overflow: hidden !important;
             background: #ffffff !important;
             padding: 12mm 12mm !important;
+            justify-content: flex-start !important;
         }
 
         .garis-lipat { 
@@ -176,7 +171,7 @@
             border: none !important;
         }
     }
-    </style>
+</style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
 
