@@ -146,6 +146,10 @@
             .sub-halaman { 
                 width: 165mm !important; 
                 height: 215mm !important; 
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+                overflow: hidden !important;
             }
     
             .garis-lipat { 
@@ -804,7 +808,7 @@
         tempDiv.className = "w-full h-full flex flex-col justify-between";
         tempDiv.innerHTML = `
             <div class="isi-konten-halaman flex-1 overflow-hidden"></div>
-            <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-1 mt-1 flex justify-between px-1">
+            <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-1 mt-auto flex justify-between px-1">
                 <span>Kitab Studio</span>
                 <span class="font-bold text-slate-800 text-[10px] bg-slate-100 px-2 rounded-full">- ${no} -</span>
                 <span>Matan, Lughot, Ringkesan & Nadoman</span>
