@@ -805,9 +805,10 @@
 
     function buatHalamanDOMVirtual(no) {
         const tempDiv = document.createElement('div');
+        // Tambahkeun h-full sareng flex flex-col supados eusina ngeusian sadaya Luhur kertas
         tempDiv.className = "w-full h-full flex flex-col justify-between";
         tempDiv.innerHTML = `
-            <div class="isi-konten-halaman flex-1 overflow-hidden"></div>
+            <div class="isi-konten-halaman flex-1"></div>
             <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-1 mt-auto flex justify-between px-1">
                 <span>Kitab Studio</span>
                 <span class="font-bold text-slate-800 text-[10px] bg-slate-100 px-2 rounded-full">- ${no} -</span>
