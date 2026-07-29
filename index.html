@@ -12,165 +12,160 @@
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     
     <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    body { margin: 0; padding: 0; font-family: sans-serif; background-color: #0f172a; color: #f8fafc; }
-    .font-arab { font-family: 'Amiri', serif; }
-
-    /* LAYOUT KERTAS (PREVIEW) */
-    .lembar-f4-cetak {
-        width: 330mm; 
-        height: 215mm;
-        min-width: 330mm;
-        min-height: 215mm;
-        max-height: 215mm;
-        background-color: #ffffff; 
-        color: #1e293b;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-        display: flex; 
-        position: relative; 
-        overflow: hidden; 
-        margin: 20px auto;
-    }
-
-    .sub-halaman {
-        width: 165mm; 
-        height: 215mm; 
-        padding: 8mm 10mm;
-        display: flex; 
-        flex-direction: column; 
-        justify-content: space-between; 
-        overflow: hidden;
-    }
-
-    .garis-lipat {
-        position: absolute; 
-        left: 50%; top: 0; bottom: 0; 
-        width: 1px;
-        border-left: 1px dashed #cbd5e1; 
-        transform: translateX(-50%); 
-        z-index: 10;
-    }
-
-    .baris-dragged { opacity: 0.4; background-color: #312e81 !important; }
-
-    .wadah-rangkuman-cetak {
-        position: relative;
-        background-image: linear-gradient(#e5e7eb 1px, transparent 1px);
-        background-size: 100% 22px;
-        line-height: 22px;
-        padding-top: 2px;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .konten-accordion {
-        max-height: 2000px;
-        overflow: hidden;
-        transition: max-height 0.3s ease-out, padding 0.3s ease-out;
-    }
-    .konten-accordion.tutup {
-        max-height: 0 !important;
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-        border: none !important;
-    }
-
-    .lafadz-klik {
-        cursor: pointer;
-        transition: all 0.2s;
-        display: inline-block;
-        padding: 0 4px;
-        border-radius: 4px;
-    }
-    .lafadz-klik:hover {
-        background-color: #065f46;
-        color: #ffffff;
-        transform: scale(1.1);
-    }
-
-    /* ==========================================================
-       SETELAN CETAK (PRINT) - AMAN DARI BLANK BODAS
-       ========================================================== */
-    @media print {
-        @page { 
-            size: 330mm 215mm; 
-            margin: 0 !important; 
-        }
-
-        body {
-            background: #ffffff !important;
-            color: #000000 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            -webkit-print-color-adjust: exact;
-        }
-
-        /* Sumputkeun sidebar panel kontrol */
-        .no-print {
-            display: none !important;
-            height: 0 !important;
-            width: 0 !important;
-            overflow: hidden !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-
-        /* Témbongkeun ngan ukur wadah hasil cetak */
-        #wadah-kertas-cetak {
-            display: flex !important;
-            flex-direction: column !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            background: #ffffff !important;
-        }
-
+        /* 1. RESET DASAR */
+        *, *::before, *::after { box-sizing: border-box; }
+        body { margin: 0; padding: 0; font-family: sans-serif; }
+        .font-arab { font-family: 'Amiri', serif; }
+    
+        /* 2. LAYOUT KERTAS (PREVIEW APLIKASI) */
         .lembar-f4-cetak {
-            display: flex !important; 
-            flex-direction: row !important;
-            width: 330mm !important; 
-            height: 215mm !important;
-            min-height: 215mm !important;
-            max-height: 215mm !important;
-            background: #ffffff !important;
-            box-shadow: none !important; 
-            margin: 0 !important; 
-            page-break-after: always !important;
-            break-after: page !important;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
-            position: relative !important;
-            overflow: hidden !important;
+            width: 330mm; 
+            height: 215mm;
+            min-width: 330mm;
+            min-height: 215mm;
+            max-height: 215mm;
+            background-color: #ffffff; 
+            color: #1e293b;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border: none !important;
+            display: flex; 
+            position: relative; 
+            overflow: hidden; 
+            margin: 20px auto;
         }
-
-        .lembar-f4-cetak:last-child {
-            page-break-after: auto !important;
-            break-after: auto !important;
+    
+        .sub-halaman {
+            width: 165mm; 
+            height: 215mm; 
+            padding: 12mm 12mm;
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            overflow: hidden;
         }
-
-        .sub-halaman { 
-            width: 165mm !important; 
-            height: 215mm !important; 
-            padding: 8mm 10mm !important;
-            overflow: hidden !important;
-            background: #ffffff !important;
+    
+        .garis-lipat {
+            position: absolute; 
+            left: 50%; top: 0; bottom: 0; 
+            width: 1px;
+            border-left: 1px dashed #cbd5e1; 
+            transform: translateX(-50%); 
+            z-index: 10;
         }
-
-        .garis-lipat { 
-            border-left: 1px dashed #94a3b8 !important; 
+    
+        /* 3. KOMPONEN LAINNA */
+        .baris-dragged { opacity: 0.4; background-color: #312e81 !important; }
+    
+        .wadah-rangkuman-cetak {
+            position: relative;
+            background-image: linear-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 100% 24px;
+            line-height: 24px;
+            padding-top: 4px;
+            border-bottom: 1px solid #e5e7eb;
         }
-    }
+    
+        .konten-accordion {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+        .konten-accordion.tutup {
+            max-height: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            border: none !important;
+        }
+    
+        .lafadz-klik {
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+            padding: 0 4px;
+            border-radius: 4px;
+        }
+        .lafadz-klik:hover {
+            background-color: #065f46;
+            color: #ffffff;
+            transform: scale(1.1);
+        }
+    
+        /* Pikeun ngaleungitkeun border dina aplikasi biasa */
+        .lembar-f4-cetak table, 
+        .lembar-f4-cetak td, 
+        .lembar-f4-cetak div, 
+        .kotak-bandongan-satuan {
+            border: none !important;
+            outline: none !important;
+        }
+    
+        /* 4. SETELAN CETAK (PRINT) */
+        @media print {
+            @page { size: 330mm 215mm; margin: 0 !important; }
+    
+            /* Sumputkeun panel kénca, tombol, jeung elemen pangrojong lianna sacara mutlak */
+            .no-print, 
+            #file-input, 
+            #judul-preview, 
+            div[style*="width: 480px"], 
+            .w-full.lg\:w-\[480px\],
+            .bg-slate-800.flex-shrink-0 { 
+                display: none !important; 
+            }
+    
+            html, body, .flex, .h-screen, .overflow-hidden {
+                display: block !important;
+                height: auto !important;
+                overflow: visible !important;
+                background: #ffffff !important;
+                color: #000000 !important;
+                margin: 0 !important;
+            }
+    
+            #wadah-kertas-cetak {
+                display: block !important;
+                width: 330mm !important;
+                height: auto !important;
+                margin: 0 !important;
+            }
+    
+            .lembar-f4-cetak {
+                display: flex !important; 
+                flex-direction: row !important;
+                width: 330mm !important; 
+                height: 215mm !important;
+                page-break-after: always !important; 
+                break-after: page !important;
+                break-inside: avoid !important;
+                box-shadow: none !important; 
+                border: none !important;
+                margin: 0 !important; 
+                position: relative !important;
+            }
+    
+            .sub-halaman { 
+                width: 165mm !important; 
+                height: 215mm !important; 
+            }
+    
+            .garis-lipat { 
+                border-left: 1px dashed #94a3b8 !important; 
+            }
+    
+            .lembar-f4-cetak * { 
+                border: none !important; 
+            }
+        }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
 
-<div class="flex flex-col lg:flex-row w-full min-h-screen lg:h-screen overflow-y-auto lg:overflow-hidden">
+<div class="flex flex-col lg:flex-row w-full min-h-screen lg:h-screen overflow-y-auto lg:overflow-hidden bg-slate-900 text-slate-100">
         
-    <!-- PANEL INPUTAN (KENCA) -->
+    <!-- 1. PANEL INPUTAN (KENCA) -->
     <div class="w-full lg:w-[480px] lg:min-w-[480px] lg:max-w-[480px] lg:h-full bg-slate-800 flex flex-col border-b lg:border-r border-slate-700 no-print">
         
+        <!-- PANEL TOP BAR -->
         <div class="bg-slate-900 border-b border-slate-700 shadow-lg p-3 space-y-3 z-30 flex-shrink-0">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
@@ -207,6 +202,7 @@
             </div>
         </div>
 
+        <!-- WADAH EUSI NAVIGASI -->
         <div class="flex-1 p-4 overflow-y-auto space-y-3 pb-28">
             <div class="bg-slate-950 p-2 rounded border border-slate-800 flex items-center justify-between gap-2 mb-2">
                 <span class="text-[11px] font-bold text-indigo-400 uppercase tracking-wider">📚 Kitab Aktip:</span>
@@ -217,7 +213,7 @@
                 </select>
             </div>
 
-            <!-- SECTION 1 -->
+            <!-- SECTION 1: MANAJEMEN FASAL -->
             <div class="bg-slate-900 rounded border border-slate-700 overflow-hidden">
                 <button onclick="toggleAccordion('acc-fasal', 'panah-fasal')" class="w-full flex justify-between items-center p-2.5 bg-slate-950/80 text-left cursor-pointer hover:bg-slate-950 transition">
                     <span class="text-xs font-bold text-indigo-300 uppercase tracking-wider">1. Daptar & Navigasi Fasal</span>
@@ -237,7 +233,7 @@
                 </div>
             </div>
 
-            <!-- SECTION 2 -->
+            <!-- SECTION 2: KOTAK ISIAN RANGKUMAN -->
             <div class="bg-slate-900 rounded border border-slate-700 overflow-hidden">
                 <button onclick="toggleAccordion('acc-rangkuman', 'panah-rangkuman')" class="w-full flex justify-between items-center p-2.5 bg-slate-950/80 text-left cursor-pointer hover:bg-slate-950 transition">
                     <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">2. Kotak Isian Rangkuman</span>
@@ -248,7 +244,7 @@
                 </div>
             </div>
 
-            <!-- SECTION 3 -->
+            <!-- SECTION 3: MATRIKS BARIS INPUTAN -->
             <div class="bg-slate-900 rounded border border-slate-700 overflow-hidden">
                 <div class="w-full p-2.5 bg-slate-950/80 text-left border-b border-slate-800">
                     <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">3. Eusi Baris Kitab & Susunan Logat</span>
@@ -265,6 +261,7 @@
             </div>
         </div>
 
+        <!-- TOMBOL CETAK NANGKLED DI HANDAP -->
         <div class="p-4 bg-slate-900 border-t border-slate-700 shadow-2xl grid grid-cols-2 gap-2 mt-auto z-30 flex-shrink-0">
             <button onclick="cetakBuku('sadaya')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-2 rounded transition shadow-md cursor-pointer text-[11px] uppercase tracking-wider text-center">
                 🖨️ Cetak Sadaya Fasal
@@ -275,7 +272,7 @@
         </div>
     </div>
 
-    <!-- PANEL PREVIEW BUKU (KATUHUKUN) -->
+    <!-- 2. PANEL PREVIEW BUKU (KATUHUKUN) -->
     <div class="flex-1 h-full bg-slate-950 overflow-auto p-6 flex flex-col items-center">
         <h2 id="judul-preview" class="text-xs font-semibold text-slate-400 mb-4 pb-1 border-b border-slate-800 w-full text-center no-print flex-shrink-0">
             Sawangan Cetak Buku Lipat Tengah
@@ -302,6 +299,7 @@
     let barisNuKeurDiDrag = null;
     let modeCetak = "sadaya";
 
+    // Variabel Database Kitab & Kitab Aktip
     let databaseKitab = {
         safinah: JSON.parse(JSON.stringify(kitabData)),
         tijan: [],
@@ -309,6 +307,7 @@
     };
     let kitabAktip = 'safinah';
 
+    // URL Web App Google Apps Script
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwILJ2fnC-mfCd7eSQnUS7V9nq260zN0-kHl6uxbExOC9e4vZ_k6LPIjdqwOVct4ER1BA/exec";
 
     function toggleAccordion(idKonten, idPanah) {
@@ -340,7 +339,9 @@
             cb.addEventListener("change", function (e) {
                 e.stopPropagation();
                 kitabData[idx].dicitak = this.checked;
-                prosesTeksMenjadiBooklet();
+                if (modeCetak === "terpilih") {
+                    prosesTeksMenjadiBooklet();
+                }
             });
 
             const btn = document.createElement('button');
@@ -474,9 +475,9 @@
                 htmlKontenInput = `
                     <div class="w-[16%] text-[10px] font-bold text-amber-400 uppercase">Bandongan</div>
                     <div class="w-[72%] flex gap-1">
-                        <input type="text" value="${item.luhur || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataBandongan(${index}, 'luhur', this.value)" class="w-1/3 p-1 bg-slate-950 text-slate-100 text-[9px] italic rounded border border-slate-700" placeholder="Luhur">
+                        <input type="text" value="${item.luhur || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataBandongan(${index}, 'luhur', this.value)" class="w-1/3 p-1 bg-slate-950 text-slate-100 text-[10px] italic rounded border border-slate-700" placeholder="Luhur">
                         <input type="text" value="${item.arab || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataBandongan(${index}, 'arab', this.value)" class="w-1/3 p-1 bg-slate-950 text-slate-100 font-arab text-sm text-right rounded border border-slate-700" placeholder="Arab">
-                        <input type="text" value="${item.sunda || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataBandongan(${index}, 'sunda', this.value)" class="w-1/3 p-1 bg-slate-950 text-slate-100 text-[9px] rounded border border-slate-700" placeholder="Sunda">
+                        <input type="text" value="${item.sunda || ''}" onfocus="setBarisAktip(${index})" oninput="updateDataBandongan(${index}, 'sunda', this.value)" class="w-1/3 p-1 bg-slate-950 text-slate-100 text-[10px] rounded border border-slate-700" placeholder="Sunda">
                     </div>
                 `;
             }
@@ -549,16 +550,25 @@
     }
     function handleDragEnd() { renderBarisInput(); }
 
+    // ==========================================
+    // FUNGSI DATABASE & PILIHAN KITAB (DILERESKEUN)
+    // ==========================================
     function simpanKeDatabase() {
         databaseKitab[kitabAktip] = kitabData;
-        let payload = { kitabAktip: kitabAktip, dataFasal: kitabData };
+
+        let payload = {
+            kitabAktip: kitabAktip,
+            dataFasal: kitabData
+        };
 
         fetch(WEB_APP_URL, {
             method: 'POST',
             body: JSON.stringify(payload)
         })
         .then(response => response.json())
-        .then(data => { alert(data.pesan); })
+        .then(data => {
+            alert(data.pesan);
+        })
         .catch(error => {
             console.error('Éror:', error);
             alert("Gagal nyambung ka Spreadsheet!");
@@ -608,6 +618,7 @@
         indexBarisAktip = 0;
         bukaFasalAktip();
     }
+    // ==========================================
 
     function prosesTeksMenjadiBooklet() {
         const wadahKertas = document.getElementById('wadah-kertas-cetak');
@@ -641,13 +652,13 @@
                 if (item.tipe === 'arabfull') {
                     if (item.teks && item.teks.trim()) {
                         const arabDiv = document.createElement('div');
-                        arabDiv.className = "w-full text-center px-1 my-2.5 elemen-cetak-tunggal";
+                        arabDiv.className = "w-full text-center px-1 my-3 elemen-cetak-tunggal";
                         arabDiv.innerHTML = `<p class="font-arab text-xl font-medium leading-loose text-slate-950 tracking-wide text-center">${item.teks}</p>`;
                         wadahBlokKonten.appendChild(arabDiv);
                     }
                 } else if (item.tipe === 'nadoman') {
                     const nadoDiv = document.createElement('div');
-                    nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-1.5 border-t border-b border-gray-400 py-1 space-y-0.5 elemen-cetak-tunggal";
+                    nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-2 border-t border-b border-gray-400 py-1 space-y-0.5 elemen-cetak-tunggal";
                     nadoDiv.innerHTML = `
                         <table class="w-full text-[11px] border-b border-dotted border-gray-300 px-1" style="table-layout: fixed; width: 100%;">
                             <tr>
@@ -659,7 +670,7 @@
                     wadahBlokKonten.appendChild(nadoDiv);
                 } else if (item.tipe === 'bandongan') {
                     const boxBandongan = document.createElement('div');
-                    boxBandongan.className = "border-r border-b border-gray-300 p-1 text-center bg-white min-h-[90px] elemen-cetak-tunggal kotak-bandongan-satuan box-border";
+                    boxBandongan.className = "border-r border-b border-gray-300 p-1 text-center bg-white min-h-[95px] elemen-cetak-tunggal kotak-bandongan-satuan box-border";
                     
                     boxBandongan.style.setProperty('width', '20%', 'important');
                     boxBandongan.style.setProperty('flex', '0 0 20%', 'important');
@@ -686,7 +697,7 @@
                 });
 
                 const rangkumanDiv = document.createElement('div');
-                rangkumanDiv.className = "w-full mt-3 mb-1.5 font-sans elemen-cetak-tunggal";
+                rangkumanDiv.className = "w-full mt-4 mb-2 font-sans elemen-cetak-tunggal";
                 rangkumanDiv.innerHTML = `
                     <div class="text-xs font-bold text-slate-950 uppercase underline tracking-wider mb-1">RANGKUMAN</div>
                     <div class="wadah-rangkuman-cetak border-t border-gray-300">
@@ -703,13 +714,13 @@
         wadahKertas.appendChild(halamanDOMVirtual); 
         let targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
 
-        const TINGGI_MAKSIMAL = 730; 
+        const TINGGI_MAKSIMAL = 690; 
         const kumpulanElemen = Array.from(wadahBlokKonten.children);
         let gridOtomatisSekarang = null;
 
         function jieunGridAnyar() {
             const gridDiv = document.createElement('div');
-            gridDiv.className = "border-t border-l border-gray-300 my-1.5 wadah-grid-induk w-full";
+            gridDiv.className = "border-t border-l border-gray-300 my-2 wadah-grid-induk w-full";
             gridDiv.style.direction = "rtl";
             gridDiv.style.setProperty('display', 'flex', 'important');
             gridDiv.style.setProperty('flex-wrap', 'wrap', 'important');
@@ -795,7 +806,7 @@
         tempDiv.className = "w-full h-full flex flex-col justify-between";
         tempDiv.innerHTML = `
             <div class="isi-konten-halaman flex-1 overflow-hidden"></div>
-            <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-0.5 mt-0.5 flex justify-between px-1">
+            <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-1 mt-1 flex justify-between px-1">
                 <span>Kitab Studio</span>
                 <span class="font-bold text-slate-800 text-[10px] bg-slate-100 px-2 rounded-full">- ${no} -</span>
                 <span>Matan, Lughot, Ringkesan & Nadoman</span>
@@ -811,22 +822,8 @@
 
     function cetakBuku(mode) {
         modeCetak = mode;
-        
-        const wadahTab = document.getElementById('wadah-tab-fasal');
-        if (wadahTab) {
-            const listCheckbox = wadahTab.querySelectorAll('input[type="checkbox"]');
-            listCheckbox.forEach((cb, idx) => {
-                if (kitabData[idx]) {
-                    kitabData[idx].dicitak = cb.checked;
-                }
-            });
-        }
-
         prosesTeksMenjadiBooklet();
-        
-        setTimeout(() => { 
-            window.print(); 
-        }, 350);
+        setTimeout(() => { window.print(); }, 50);
     }
 
     function prosesImporJson(event) {
@@ -844,7 +841,7 @@
                 bukaFasalAktip();
                 alert("Alhamdulillah, data JSON suksés dimuat kana aplikasi!");
             } catch (error) {
-                alert("Gagal membaca file JSON!");
+                alert("Gagal membaca file JSON! Pastikeun format file-na leres.");
             }
         };
         reader.readAsText(file);
