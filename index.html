@@ -119,27 +119,27 @@
             -webkit-print-color-adjust: exact;
         }
 
+        /* Sumputkeun sadaya elemen UI aplikasi, iwal wadah cetak */
+        body > div:first-child,
         .no-print,
-        div.no-print,
-        .bg-slate-800,
-        .bg-slate-900,
-        body > div > div:first-child {
+        div.no-print {
             display: none !important;
             width: 0 !important;
             height: 0 !important;
             overflow: hidden !important;
-            position: absolute !important;
-            left: -9999px !important;
         }
 
         #wadah-kertas-cetak {
-            display: block !important;
+            display: flex !important;
+            flex-direction: column !important;
             width: 100% !important;
             height: auto !important;
             margin: 0 !important;
             padding: 0 !important;
             background: #ffffff !important;
-            position: relative !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
             overflow: visible !important;
         }
 
@@ -838,7 +838,7 @@
     function cetakBuku(mode) {
         modeCetak = mode;
         
-        // Simpen status checkbox panganyarna tina DOM ka kitabData
+        // Sinkronkeun centang tina checkbox UI
         const wadahTab = document.getElementById('wadah-tab-fasal');
         if (wadahTab) {
             const listCheckbox = wadahTab.querySelectorAll('input[type="checkbox"]');
@@ -848,6 +848,14 @@
                 }
             });
         }
+
+        prosesTeksMenjadiBooklet();
+        
+        // Jeda waktos 300ms supados DOM teu kosong pas dicetak
+        setTimeout(() => { 
+            window.print(); 
+        }, 300);
+    }
 
         prosesTeksMenjadiBooklet();
         
