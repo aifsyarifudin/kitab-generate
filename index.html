@@ -37,7 +37,7 @@
     .sub-halaman {
         width: 165mm; 
         height: 215mm; 
-        padding: 8mm 10mm; /* Diirangan sakedik padding luhur-handapna supados teu kapotong */
+        padding: 8mm 10mm;
         display: flex; 
         flex-direction: column; 
         justify-content: space-between; 
@@ -365,7 +365,7 @@
             cb.addEventListener("change", function (e) {
                 e.stopPropagation();
                 kitabData[idx].dicitak = this.checked;
-                prosesTeksMenjadiBooklet(); // Langsung proses ulang preview nalika dicentang/henteu
+                prosesTeksMenjadiBooklet();
             });
 
             const btn = document.createElement('button');
@@ -728,7 +728,6 @@
         wadahKertas.appendChild(halamanDOMVirtual); 
         let targetDiv = halamanDOMVirtual.querySelector('.isi-konten-halaman');
 
-        // Ditambihan janten 730 supados eusi leuwih padet ka handap tanpa kapotong
         const TINGGI_MAKSIMAL = 730; 
         const kumpulanElemen = Array.from(wadahBlokKonten.children);
         let gridOtomatisSekarang = null;
@@ -838,7 +837,7 @@
     function cetakBuku(mode) {
         modeCetak = mode;
         
-        // Sinkronkeun centang tina checkbox UI
+        // Sinkronkeun centang tina checkbox UI kana kitabData
         const wadahTab = document.getElementById('wadah-tab-fasal');
         if (wadahTab) {
             const listCheckbox = wadahTab.querySelectorAll('input[type="checkbox"]');
@@ -852,14 +851,6 @@
         prosesTeksMenjadiBooklet();
         
         // Jeda waktos 300ms supados DOM teu kosong pas dicetak
-        setTimeout(() => { 
-            window.print(); 
-        }, 300);
-    }
-
-        prosesTeksMenjadiBooklet();
-        
-        // Tambihan reureuh sakedik supados DOM sempat dirender deui
         setTimeout(() => { 
             window.print(); 
         }, 300);
