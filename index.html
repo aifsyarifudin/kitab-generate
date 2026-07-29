@@ -37,7 +37,7 @@
         .sub-halaman {
             width: 165mm; 
             height: 215mm; 
-            padding: 12mm 12mm;
+            padding: 12mm 12mm 6mm 12mm; /* Padding handap dileutikan janten 6mm */
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
@@ -143,13 +143,14 @@
                 position: relative !important;
             }
     
-            .sub-halaman { 
-                width: 165mm !important; 
-                height: 215mm !important; 
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: space-between !important;
-                overflow: hidden !important;
+            .sub-halaman {
+                width: 165mm; 
+                height: 215mm; 
+                padding: 12mm 12mm 6mm 12mm; /* Padding handap dileutikan janten 6mm */
+                display: flex; 
+                flex-direction: column; 
+                justify-content: space-between; 
+                overflow: hidden;
             }
     
             .garis-lipat { 
