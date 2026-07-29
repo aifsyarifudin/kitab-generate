@@ -90,11 +90,12 @@
             transform: scale(1.1);
         }
     
-        /* Pikeun ngaleungitkeun border dina aplikasi biasa */
+        /* Pikeun ngaleungitkeun border/garis dina preview & cetak */
         .lembar-f4-cetak table, 
         .lembar-f4-cetak td, 
         .lembar-f4-cetak div, 
-        .kotak-bandongan-satuan {
+        .kotak-bandongan-satuan,
+        .wadah-grid-induk {
             border: none !important;
             outline: none !important;
         }
@@ -103,7 +104,6 @@
         @media print {
             @page { size: 330mm 215mm; margin: 0 !important; }
     
-            /* Sumputkeun panel kénca, tombol, jeung elemen pangrojong lianna sacara mutlak */
             .no-print, 
             #file-input, 
             #judul-preview, 
@@ -550,9 +550,6 @@
     }
     function handleDragEnd() { renderBarisInput(); }
 
-    // ==========================================
-    // FUNGSI DATABASE & PILIHAN KITAB (DILERESKEUN)
-    // ==========================================
     function simpanKeDatabase() {
         databaseKitab[kitabAktip] = kitabData;
 
@@ -618,7 +615,6 @@
         indexBarisAktip = 0;
         bukaFasalAktip();
     }
-    // ==========================================
 
     function prosesTeksMenjadiBooklet() {
         const wadahKertas = document.getElementById('wadah-kertas-cetak');
@@ -644,7 +640,7 @@
 
         dataFasalDiProses.forEach((fasal) => {
             const judulDiv = document.createElement('div');
-            judulDiv.className = "w-full text-center my-2 border-b-2 border-slate-900 pb-0.5 elemen-cetak-tunggal";
+            judulDiv.className = "w-full text-center my-2 pb-0.5 elemen-cetak-tunggal";
             judulDiv.innerHTML = `<h2 class="text-xs font-extrabold tracking-wider text-slate-900 font-sans uppercase">${fasal.nama}</h2>`;
             wadahBlokKonten.appendChild(judulDiv);
 
@@ -658,19 +654,19 @@
                     }
                 } else if (item.tipe === 'nadoman') {
                     const nadoDiv = document.createElement('div');
-                    nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-2 border-t border-b border-gray-400 py-1 space-y-0.5 elemen-cetak-tunggal";
+                    nadoDiv.className = "w-full text-xs font-sans text-slate-900 mb-2 py-1 space-y-0.5 elemen-cetak-tunggal";
                     nadoDiv.innerHTML = `
-                        <table class="w-full text-[11px] border-b border-dotted border-gray-300 px-1" style="table-layout: fixed; width: 100%;">
-                            <tr>
-                                <td class="text-left font-medium text-slate-900 align-top" style="width: 47%; word-wrap: break-word;">${item.bait1 || '&nbsp;'}</td>
-                                <td class="text-center font-bold text-gray-400 align-top" style="width: 6%;">#</td>
-                                <td class="text-left font-medium text-slate-900 align-top" style="width: 47%; word-wrap: break-word;">${item.bait2 || '&nbsp;'}</td>
+                        <table class="w-full text-[11px] px-1" style="table-layout: fixed; width: 100%; border: none !important;">
+                            <tr style="border: none !important;">
+                                <td class="text-left font-medium text-slate-900 align-top" style="width: 47%; word-wrap: break-word; border: none !important;">${item.bait1 || '&nbsp;'}</td>
+                                <td class="text-center font-bold text-gray-400 align-top" style="width: 6%; border: none !important;">#</td>
+                                <td class="text-left font-medium text-slate-900 align-top" style="width: 47%; word-wrap: break-word; border: none !important;">${item.bait2 || '&nbsp;'}</td>
                             </tr>
                         </table>`;
                     wadahBlokKonten.appendChild(nadoDiv);
                 } else if (item.tipe === 'bandongan') {
                     const boxBandongan = document.createElement('div');
-                    boxBandongan.className = "border-r border-b border-gray-300 p-1 text-center bg-white min-h-[95px] elemen-cetak-tunggal kotak-bandongan-satuan box-border";
+                    boxBandongan.className = "p-1 text-center bg-white min-h-[95px] elemen-cetak-tunggal kotak-bandongan-satuan box-border";
                     
                     boxBandongan.style.setProperty('width', '20%', 'important');
                     boxBandongan.style.setProperty('flex', '0 0 20%', 'important');
@@ -678,6 +674,7 @@
                     boxBandongan.style.setProperty('flex-direction', 'column', 'important');
                     boxBandongan.style.setProperty('justify-content', 'space-between', 'important');
                     boxBandongan.style.setProperty('align-items', 'center', 'important');
+                    boxBandongan.style.setProperty('border', 'none', 'important');
 
                     boxBandongan.innerHTML = `
                         <span class="text-[8px] text-gray-400 italic font-sans block w-full" style="direction: ltr;">${item.luhur || '&nbsp;'}</span>
@@ -700,7 +697,7 @@
                 rangkumanDiv.className = "w-full mt-4 mb-2 font-sans elemen-cetak-tunggal";
                 rangkumanDiv.innerHTML = `
                     <div class="text-xs font-bold text-slate-950 uppercase underline tracking-wider mb-1">RANGKUMAN</div>
-                    <div class="wadah-rangkuman-cetak border-t border-gray-300">
+                    <div class="wadah-rangkuman-cetak">
                         ${htmlBarisRangkuman}
                     </div>
                 `;
@@ -720,11 +717,12 @@
 
         function jieunGridAnyar() {
             const gridDiv = document.createElement('div');
-            gridDiv.className = "border-t border-l border-gray-300 my-2 wadah-grid-induk w-full";
+            gridDiv.className = "my-2 wadah-grid-induk w-full";
             gridDiv.style.direction = "rtl";
             gridDiv.style.setProperty('display', 'flex', 'important');
             gridDiv.style.setProperty('flex-wrap', 'wrap', 'important');
             gridDiv.style.setProperty('justify-content', 'center', 'important');
+            gridDiv.style.setProperty('border', 'none', 'important');
             targetDiv.appendChild(gridDiv);
             gridOtomatisSekarang = gridDiv;
         }
