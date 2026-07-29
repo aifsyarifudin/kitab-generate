@@ -365,9 +365,7 @@
             cb.addEventListener("change", function (e) {
                 e.stopPropagation();
                 kitabData[idx].dicitak = this.checked;
-                if (modeCetak === "terpilih") {
-                    prosesTeksMenjadiBooklet();
-                }
+                prosesTeksMenjadiBooklet(); // Langsung proses ulang preview nalika dicentang/henteu
             });
 
             const btn = document.createElement('button');
@@ -839,8 +837,24 @@
 
     function cetakBuku(mode) {
         modeCetak = mode;
+        
+        // Simpen status checkbox panganyarna tina DOM ka kitabData
+        const wadahTab = document.getElementById('wadah-tab-fasal');
+        if (wadahTab) {
+            const listCheckbox = wadahTab.querySelectorAll('input[type="checkbox"]');
+            listCheckbox.forEach((cb, idx) => {
+                if (kitabData[idx]) {
+                    kitabData[idx].dicitak = cb.checked;
+                }
+            });
+        }
+
         prosesTeksMenjadiBooklet();
-        setTimeout(() => { window.print(); }, 50);
+        
+        // Tambihan reureuh sakedik supados DOM sempat dirender deui
+        setTimeout(() => { 
+            window.print(); 
+        }, 300);
     }
 
     function prosesImporJson(event) {
