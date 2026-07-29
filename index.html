@@ -180,6 +180,12 @@
             .lembar-f4-cetak * { 
                 border: none !important; 
             }
+
+            /* Nyegah lembar F4 panganggeusna muka halaman kosong anyar */
+            .lembar-f4-cetak:last-child {
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+            }
         }
     </style>
 </head>
