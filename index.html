@@ -37,11 +37,21 @@
         .sub-halaman {
             width: 165mm; 
             height: 215mm; 
-            padding: 12mm 12mm 6mm 12mm; /* Padding handap dileutikan janten 6mm */
+            padding: 12mm 12mm 15mm 12mm; /* Tambahkeun padding handap sakitar 15mm sangkan kontén moal nindih footer */
             display: flex; 
             flex-direction: column; 
-            justify-content: space-between; 
+            position: relative; /* Penting pisan kanggo patokan footer */
             overflow: hidden;
+        }
+        
+        /* Tambahkeun kelas CSS ieu kanggo footer */
+        .footer-halaman {
+            position: absolute;
+            bottom: 8mm; /* Jarak pas ti handap kertas */
+            left: 12mm;
+            right: 12mm;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 4px;
         }
     
         .garis-lipat {
@@ -143,14 +153,23 @@
                 position: relative !important;
             }
     
-            .sub-halaman {
-                width: 165mm; 
-                height: 215mm; 
-                padding: 12mm 12mm 6mm 12mm; /* Padding handap dileutikan janten 6mm */
-                display: flex; 
-                flex-direction: column; 
-                justify-content: space-between; 
-                overflow: hidden;
+            .sub-halaman { 
+                width: 165mm !important; 
+                height: 215mm !important; 
+                padding: 12mm 12mm 15mm 12mm !important;
+                display: flex !important;
+                flex-direction: column !important;
+                position: relative !important;
+                overflow: hidden !important;
+                page-break-after: always !important; 
+                break-after: page !important;
+            }
+        
+            .footer-halaman {
+                position: absolute !important;
+                bottom: 8mm !important;
+                left: 12mm !important;
+                right: 12mm !important;
             }
     
             .garis-lipat { 
@@ -806,11 +825,10 @@
 
     function buatHalamanDOMVirtual(no) {
         const tempDiv = document.createElement('div');
-        // Tambahkeun h-full sareng flex flex-col supados eusina ngeusian sadaya Luhur kertas
-        tempDiv.className = "w-full h-full flex flex-col justify-between";
+        tempDiv.className = "w-full h-full flex flex-col";
         tempDiv.innerHTML = `
-            <div class="isi-konten-halaman flex-1"></div>
-            <div class="text-center font-mono text-[9px] text-gray-400 border-t border-gray-200 pt-1 mt-auto flex justify-between px-1">
+            <div class="isi-konten-halaman flex-1 overflow-hidden"></div>
+            <div class="footer-halaman text-center font-mono text-[9px] text-gray-400 flex justify-between px-1">
                 <span>Kitab Studio</span>
                 <span class="font-bold text-slate-800 text-[10px] bg-slate-100 px-2 rounded-full">- ${no} -</span>
                 <span>Matan, Lughot, Ringkesan & Nadoman</span>
